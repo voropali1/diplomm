@@ -1,0 +1,179 @@
+package com.example.myapplication2.ui.detail
+
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication2.R
+import com.example.myapplication2.adapters.SpecificStudySetAdapter
+import com.example.myapplication2.base.Word
+import com.example.myapplication2.databinding.ActivitySpecificStudysetBinding
+import com.example.myapplication2.model.StudySet
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+
+
+
+@AndroidEntryPoint
+class StudySetDetailsFragment : Fragment() {
+
+    private var _binding: ActivitySpecificStudysetBinding? = null
+    private val binding get() = _binding!!
+    private var studySet: StudySet? = null
+    private lateinit var wordsAdapter: SpecificStudySetAdapter
+    private lateinit var allWords: List<Word>
+    @Inject lateinit var sharedPreferences: SharedPreferences
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = ActivitySpecificStudysetBinding.inflate(inflater, container, false)
+
+        arguments?.let {
+            studySet = it.getSerializable("studySet") as? StudySet
+            studySet?.let { set ->
+                Log.d("StudySetDetailsFragment", "Received words string: ${set.words}")
+
+                val wordsList = parseWordsFromString(set.words)
+                wordsAdapter = SpecificStudySetAdapter(wordsList, sharedPreferences)
+                loadMarkedFlags(wordsList) // обновляем флаги, не фильтруем
+                allWords = wordsList
+
+                //wordsAdapter = SpecificStudySetAdapter(allWords, sharedPreferences)
+                binding.wordsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+                binding.wordsRecyclerview.adapter = wordsAdapter
+            }
+        }
+
+        binding.makeDictationBtn.setOnClickListener {
+            Toast.makeText(requireContext(), "Диктант начинается!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardModeBtn.setOnClickListener {
+            val wordsString = allWords.joinToString("\n") { "${it.term} - ${it.translation}" }
+
+            val bundle = Bundle().apply {
+                putString("wordsString", wordsString)
+            }
+
+            val action = StudySetDetailsFragmentDirections.actionStudySetDetailsFragmentToCardModeFragment(wordsString)
+            findNavController().navigate(action)
+
+        }
+
+        binding.learnBtn.setOnClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("words", ArrayList(allWords)) // Word должен быть Serializable
+            }
+
+            findNavController().navigate(R.id.quizFragment, bundle)
+        }
+
+
+
+
+
+        binding.studyAllMBTN.setOnClickListener {
+            binding.studyAllMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
+            binding.studyMarkedMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.studyAllMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.studyMarkedMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+            wordsAdapter.updateData(allWords)
+        }
+
+        binding.studyMarkedMBTN.setOnClickListener {
+            binding.studyMarkedMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
+            binding.studyAllMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.studyMarkedMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.studyAllMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+            val markedWords = wordsAdapter.getAllWords().filter { it.isMarked }
+            wordsAdapter.updateData(markedWords)
+        }
+
+        return binding.root
+    }
+
+    private fun parseWordsFromString(wordsString: String): List<Word> {
+        return wordsString.lines().mapNotNull { line ->
+            val parts = line.split(" - ")
+            if (parts.size == 2) {
+                val first = parts[0].trim()
+                val second = parts[1].trim()
+                Log.d("StudySetDetailsFragment", "Parsed word pair: $first - $second")
+                Word(first, second)
+            } else {
+                Log.w("StudySetDetailsFragment", "Skipping invalid line: $line")
+                null
+            }
+        }
+    }
+
+    private fun loadMarkedFlags(wordsList: List<Word>) {
+        for (word in wordsList) {
+            val key = "word_marked_${word.term}_${word.translation}".hashCode().toString()
+            val isMarked = sharedPreferences.getBoolean(key, false)
+            word.isMarked = isMarked
+            Log.d("StudySetDetailsFragment", "Loaded marked flag for ${word.term}: $isMarked")
+        }
+
+    }
+
+
+
+
+    private fun saveMarkedWords() {
+        val editor = sharedPreferences.edit()
+        for (word in wordsAdapter.getAllWords()) {
+            editor.putBoolean("word_marked_${word.id}", word.isMarked)
+        }
+        editor.apply()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_specific_study_set, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.edit_study_set -> {
+                studySet?.let { set ->
+                    val bundle = Bundle().apply {
+                        putSerializable("studySet", studySet) // studySet уже есть у тебя
+                    }
+                    findNavController().navigate(R.id.create_study_set, bundle)
+                }
+                true
+            }
+            R.id.share -> {
+                Toast.makeText(requireContext(), "Поделиться сетом", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
+

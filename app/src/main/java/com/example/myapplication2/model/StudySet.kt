@@ -1,0 +1,64 @@
+package com.example.myapplication2.model
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import java.io.Serializable
+
+
+@Entity(tableName = "study_set_table")
+class StudySet : Serializable {
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+
+    var creator: String? = null
+    var name: String? = null
+    var words: String
+    var marked_words: String? = null
+    var language_to: String? = null
+    var language_from: String? = null
+    var isSync_status: Boolean = false
+    var amount_of_words: Int
+
+
+    @ColumnInfo(defaultValue = "0")
+    var sync_status: Int = 0 // Добавляем эту колонку
+
+    constructor(
+        creator: String?,
+        name: String?,
+        words: String,
+        marked_words: String?, // 👈 Добавляем этот параметр!
+        language_to: String?,
+        language_from: String?,
+        amount_of_words: Int,
+
+
+    ) {
+        this.creator = creator
+        this.name = name
+        this.words = words
+        this.marked_words = marked_words // 👈 Добавляем и инициализируем
+        this.language_to = language_to
+        this.language_from = language_from
+        this.amount_of_words = amount_of_words
+
+    }
+
+    @Ignore
+    constructor(words: String, amount_of_words: Int) {
+        this.words = words
+        this.amount_of_words = amount_of_words
+
+    }
+
+    @Ignore
+    constructor(id: Int, words: String, amount_of_words: Int) {
+        this.words = words
+        this.id = id
+        this.amount_of_words = amount_of_words
+
+    }
+}

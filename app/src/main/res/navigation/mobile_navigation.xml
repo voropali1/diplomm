@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/fragment_study_sets">
+
+    <fragment
+        android:id="@+id/fragment_study_sets"
+        android:name="com.example.myapplication2.ui.studyset.StudySetsListFragment"
+        android:label="Study Sets"
+        tools:layout="@layout/fragment_study_sets">
+
+        <action
+            android:id="@+id/action_to_studySetDetailsFragment"
+            app:destination="@id/studySetDetailsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/create_study_set"
+        android:name="com.example.myapplication2.ui.studyset.CreateStudySetFragment"
+        tools:layout="@layout/fragment_create_study_set">
+        <action
+            android:id="@+id/action_createStudySetFragment_to_studySetDetailsFragment"
+            app:destination="@id/studySetDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/studySetDetailsFragment"
+        android:name="com.example.myapplication2.ui.detail.StudySetDetailsFragment"
+        android:label="Study Set Detail"
+        tools:layout="@layout/activity_specific_studyset">
+        <argument
+            android:name="studySet"
+            app:argType="com.example.myapplication2.model.StudySet"
+            app:nullable="true"/>
+
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_cardModeFragment"
+            app:destination="@id/cardModeFragment" />
+
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_quizFragment"
+            app:destination="@id/quizFragment">
+        </action>
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_createStudySetFragment"
+            app:destination="@id/create_study_set" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.myapplication2.ui.notifications.NotificationsFragment"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/cardModeFragment"
+        android:name="com.example.myapplication2.ui.cards.CardModeFragment"
+        android:label="Cards"
+        tools:layout="@layout/activity_card_mode">
+    <argument
+        android:name="wordsString"
+        app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.example.myapplication2.ui.learn.QuizFragment"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_quiz_stage" >
+
+    </fragment>
+
+
+</navigation>

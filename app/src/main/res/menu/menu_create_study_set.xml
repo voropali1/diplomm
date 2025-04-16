@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Кнопка с галочкой для сохранения набора -->
+    <item
+        android:id="@+id/submitWords"
+        android:title="@string/submit_words"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_submit_words"
+        android:iconTint="#FFFFFF"
+        android:orderInCategory="1" />
+</menu>

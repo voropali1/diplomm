@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/emoji_IV"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/anim_smart" />
+
+    <TextView
+        android:padding="10dp"
+        android:layout_below="@id/emoji_IV"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:letterSpacing="0.1"
+        android:textSize="16sp"
+        android:textColor="@color/darkColor"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/return_to_studyset_MBTN"
+        android:text="Back to Study set"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        app:icon="@drawable/ic_refresh_white" />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:onClick="reloadViewPager"
+        android:id="@+id/continue_learning_MBTN"
+        android:text="@string/continue_text"
+        tools:context="com.langamy.ui.learning.LearnActivity" />
+</RelativeLayout>
