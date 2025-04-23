@@ -115,7 +115,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/learn"
+                            android:text="@string/quiz"
                             android:backgroundTint="@color/pastel_mint_deep"
                             android:textSize="12sp"/>
                     </LinearLayout>

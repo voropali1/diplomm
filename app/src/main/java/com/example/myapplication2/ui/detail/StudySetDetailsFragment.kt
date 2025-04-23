@@ -120,6 +120,18 @@ class StudySetDetailsFragment : Fragment() {
             findNavController().navigate(R.id.listenFragment, bundle)
         }
 
+        binding.speakBtn.setOnClickListener {
+            if (allWords.isNotEmpty()) {
+                val bundle = Bundle().apply {
+                    putSerializable("words", ArrayList(allWords)) // Word реализует Serializable
+                }
+                findNavController().navigate(R.id.speechFragment, bundle)
+            } else {
+                Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
 
 
