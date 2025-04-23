@@ -62,11 +62,37 @@ class StudySetDetailsFragment : Fragment() {
             }
         }
 
-        binding.makeDictationBtn.setOnClickListener {
-            Toast.makeText(requireContext(), "Диктант начинается!", Toast.LENGTH_SHORT).show()
+        binding.termBtn.setOnClickListener {
+            // 👇 Здесь мы выбираем первое слово, ты можешь заменить на любое другое
+            val word = allWords.firstOrNull()
+            if (word != null) {
+                val bundle = Bundle().apply {
+                    putSerializable("words", ArrayList(allWords))
+                }
+                findNavController().navigate(R.id.definitionTermStageFragment, bundle)
+
+                findNavController().navigate(R.id.definitionTermStageFragment, bundle)
+            } else {
+                Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.translationBtn.setOnClickListener {
+            // 👇 Здесь мы выбираем первое слово, ты можешь заменить на любое другое
+            val word = allWords.firstOrNull()
+            if (word != null) {
+                val bundle = Bundle().apply {
+                    putSerializable("words", ArrayList(allWords))
+                }
+                findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
+
+                findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
+            } else {
+                Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        binding.cardModeBtn.setOnClickListener {
+
+        binding.cardsBtn.setOnClickListener {
             val wordsString = allWords.joinToString("\n") { "${it.term} - ${it.translation}" }
 
             val bundle = Bundle().apply {
@@ -84,6 +110,14 @@ class StudySetDetailsFragment : Fragment() {
             }
 
             findNavController().navigate(R.id.quizFragment, bundle)
+        }
+
+        binding.listenBtn.setOnClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("words", ArrayList(allWords)) // Word должен быть Serializable
+            }
+
+            findNavController().navigate(R.id.listenFragment, bundle)
         }
 
 

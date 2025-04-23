@@ -17,7 +17,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:text="@string/make_dictation"
+            android:text="@string/term"
             android:textSize="17sp" />
 
         <RelativeLayout

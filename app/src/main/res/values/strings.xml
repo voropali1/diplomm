@@ -3,8 +3,8 @@
     <string name="result">Result</string>
     <string name="dictation_result">Result: %1$s/%2$s</string>
     <string name="click_button_to_add_image">Click + button to add image</string>
-    <string name="term">Term</string>
-    <string name="translation">Translation</string>
+
+
     <string name="commit_study_set">Commit study set</string>
     <string name="title_activity_study_sets">StudySetsActivity</string>
     <string name="title_home">Home</string>
@@ -35,7 +35,11 @@
     <string name="commit_words">Commit words</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_dictation_code">Enter dictation code</string>
-    <string name="make_dictation">Make dictation</string>
+    <string name="term">Term</string>
+    <string name="speak">Speak</string>
+    <string name="translation">Translation</string>
+    <string name="speechtotext">speak</string>
+    <string name="listen">listen</string>
     <string name="translation_nterm">Translation - \nTerm</string>
     <string name="term_ntranslation">Term - \n Translation</string>
     <string name="quiz_n_test">Quiz test</string>

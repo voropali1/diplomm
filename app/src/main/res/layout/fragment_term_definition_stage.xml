@@ -43,7 +43,19 @@
         android:text="@string/translation"
         android:textColor="@color/darkColor" />
 
-<!--    <ImageButton-->
+    <Button
+        android:id="@+id/checkAnswerBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="check"
+        android:layout_below="@id/answer_ET"
+        android:layout_marginTop="12dp"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/blue"
+        android:textColor="@android:color/white"/>
+
+
+    <!--    <ImageButton-->
 <!--        android:background="@null"-->
 <!--        android:onClick="checkAnswerTermTranslation"-->
 <!--        android:layout_alignParentEnd="true"-->

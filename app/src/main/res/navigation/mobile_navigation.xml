@@ -46,6 +46,16 @@
         <action
             android:id="@+id/action_studySetDetailsFragment_to_createStudySetFragment"
             app:destination="@id/create_study_set" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_definitionTermStageFragment"
+            app:destination="@id/definitionTermStageFragment" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_definitionTranslationStageFragment"
+            app:destination="@id/definitionTranslationStageFragment" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_listenStageFragment"
+            app:destination="@id/listenFragment" />
+
 
 
     </fragment>
@@ -72,6 +82,40 @@
         tools:layout="@layout/fragment_quiz_stage" >
 
     </fragment>
+
+    <fragment
+        android:id="@+id/definitionTermStageFragment"
+        android:name="com.example.myapplication2.ui.term.DefinitionTermStageFragment"
+        android:label="Definition"
+        tools:layout="@layout/fragment_definition_term_stage">
+        <argument
+            android:name="word"
+            app:argType="com.example.myapplication2.base.Word"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/definitionTranslationStageFragment"
+        android:name="com.example.myapplication2.ui.translation.DefinitionTranslationStageFragment"
+        android:label="Definition"
+        tools:layout="@layout/fragment_definition_term_stage">
+        <argument
+            android:name="word"
+            app:argType="com.example.myapplication2.base.Word"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/listenFragment"
+        android:name="com.example.myapplication2.ui.audio.ListenFragment"
+        android:label="Audio"
+        tools:layout="@layout/fragment_audio_stage">
+        <argument
+            android:name="word"
+            app:argType="com.example.myapplication2.base.Word"
+            app:nullable="false" />
+    </fragment>
+
 
 
 </navigation>
