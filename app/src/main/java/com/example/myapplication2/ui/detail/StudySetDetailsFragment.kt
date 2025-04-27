@@ -69,7 +69,6 @@ class StudySetDetailsFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putSerializable("words", ArrayList(allWords))
                 }
-                findNavController().navigate(R.id.definitionTermStageFragment, bundle)
 
                 findNavController().navigate(R.id.definitionTermStageFragment, bundle)
             } else {
@@ -83,7 +82,6 @@ class StudySetDetailsFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putSerializable("words", ArrayList(allWords))
                 }
-                findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
 
                 findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
             } else {

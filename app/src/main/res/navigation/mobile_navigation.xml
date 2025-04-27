@@ -90,7 +90,7 @@
     <fragment
         android:id="@+id/definitionTermStageFragment"
         android:name="com.example.myapplication2.ui.term.DefinitionTermStageFragment"
-        android:label="Definition"
+        android:label="Term"
         tools:layout="@layout/fragment_definition_term_stage">
         <argument
             android:name="word"
@@ -101,7 +101,7 @@
     <fragment
         android:id="@+id/definitionTranslationStageFragment"
         android:name="com.example.myapplication2.ui.translation.DefinitionTranslationStageFragment"
-        android:label="Definition"
+        android:label="Translation"
         tools:layout="@layout/fragment_definition_term_stage">
         <argument
             android:name="word"
@@ -112,7 +112,7 @@
     <fragment
         android:id="@+id/listenFragment"
         android:name="com.example.myapplication2.ui.audio.ListenFragment"
-        android:label="Audio"
+        android:label="Listen"
         tools:layout="@layout/fragment_audio_stage">
         <argument
             android:name="word"
