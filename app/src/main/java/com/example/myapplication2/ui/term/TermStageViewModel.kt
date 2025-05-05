@@ -1,0 +1,44 @@
+package com.example.myapplication2.ui.term
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import com.example.myapplication2.model.Word
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class TermStageViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val wordList: List<Word> = (savedStateHandle.get<ArrayList<Word>>("words") ?: arrayListOf())
+    private var currentIndex = 0
+
+    private val _currentWord = MutableLiveData<Word>()
+    val currentWord: LiveData<Word> = _currentWord
+
+    init {
+        if (wordList.isNotEmpty()) {
+            _currentWord.value = wordList[currentIndex]
+        }
+    }
+
+    fun checkAnswer(answer: String) {
+        val correct = currentWord.value?.term.equals(answer.trim(), ignoreCase = true)
+        if (correct) {
+            nextWord()
+        }
+    }
+
+    private fun nextWord() {
+        if (currentIndex + 1 < wordList.size) {
+            currentIndex++
+            _currentWord.value = wordList[currentIndex]
+        } else {
+            // Можно показать "Конец"
+        }
+    }
+}
+

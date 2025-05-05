@@ -1,0 +1,320 @@
+@startuml
+class CardsAdapter {
+    - words: List<Word>
+    - context: Context
+    - tts: TextToSpeech?
+    - flippedStates: BooleanArray
+    --
+    + CardsAdapter(words: List<Word>, context: Context)
+    + onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder
+    + onBindViewHolder(holder: CardViewHolder, position: Int): void
+    + getItemCount(): Int
+    + onInit(status: Int): void
+    + stopTTS(): void
+    + onDestroy(): void
+}
+
+class CardViewHolder {
+    + cardView: CardView
+    + cardText: TextView
+    + volumeBtn: ImageButton
+    --
+    + CardViewHolder(view: View)
+}
+
+CardsAdapter --> CardViewHolder : contains
+CardViewHolder --> Word : binds
+
+class StudySetDetailsFragment {
+    - _binding: ActivitySpecificStudysetBinding?
+    - studySet: StudySet?
+    - wordsAdapter: SpecificStudySetAdapter
+    - allWords: List<Word>
+    - sharedPreferences: SharedPreferences
+    --
+    + onCreate(savedInstanceState: Bundle?): void
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    + onCreateOptionsMenu(menu: Menu, inflater: MenuInflater): void
+    + onOptionsItemSelected(item: MenuItem): Boolean
+    + onDestroyView(): void
+    - parseWordsFromString(wordsString: String): List<Word>
+    - loadMarkedFlags(wordsList: List<Word>): void
+    - saveMarkedWords(): void
+}
+
+class SpecificStudySetAdapter {
+    + updateData(newWords: List<Word>): void
+    + getAllWords(): List<Word>
+}
+
+class SpecificStudySetHolder {
+    - term: TextView
+    - translation: TextView
+    - starBtn: ToggleButton
+}
+
+class Word {
+    - term: String
+    - translation: String
+    - firstStage: Boolean
+    - secondStage: Boolean
+    - thirdStage: Boolean
+    - forthStage: Boolean
+    - isMarked: Boolean
+    - showKeyboard: Boolean
+    - id: String
+}
+
+StudySetDetailsFragment --> SpecificStudySetAdapter : uses
+StudySetDetailsFragment --> Word : manages
+StudySetDetailsFragment --> StudySet : manages
+SpecificStudySetAdapter --> SpecificStudySetHolder : contains
+SpecificStudySetHolder --> Word : binds
+
+class CardModeFragment {
+    - viewModel: CardModeViewModel
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+}
+
+class CardModeViewModel {
+    - sharedPreferences: SharedPreferences
+    - _words: MutableLiveData<List<Word>>
+    + words: LiveData<List<Word>>
+    --
+    + CardModeViewModel(sharedPreferences: SharedPreferences)
+    + loadWords(rawString: String): void
+}
+
+CardModeFragment --> CardModeViewModel : uses
+CardModeFragment --> CardsAdapter : uses
+CardModeViewModel --> Word : manages
+
+class CreateStudySetFragment {
+    - _binding: FragmentCreateStudySetBinding?
+    - binding: FragmentCreateStudySetBinding
+    - viewModel: CreateStudySetViewModel
+    - wordsAdapter: WordsAdapter
+    - languageFrom: String
+    - languageTo: String
+    - isEditMode: Boolean
+    - existingSet: StudySet?
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onViewCreated(view: View, savedInstanceState: Bundle?): void
+    - saveStudySet(): void
+    - fillFieldsForEditing(set: StudySet): void
+    - setSpinnerByShort(spinner: Spinner, langShort: String): void
+    - setupLanguageSpinners(): void
+    + onCreateOptionsMenu(menu: Menu, inflater: MenuInflater): void
+    + onOptionsItemSelected(item: MenuItem): Boolean
+    + onDestroyView(): void
+}
+
+class CreateStudySetViewModel {
+    - repository: StudySetRepository
+    - _studySetLiveData: MutableLiveData<StudySet>
+    --
+    + addStudySet(studySet: StudySet): void
+    + updateStudySet(studySet: StudySet): void
+    + loadStudySet(studySetId: Int): void
+}
+
+class WordsAdapter {
+    + addWord(word: Word): void
+    + getWords(): List<Word>
+    + setWords(words: List<Word>): void
+}
+
+class WordsViewHolder {
+    - termEditText: EditText
+    - translationEditText: EditText
+    - deleteBtn: ImageButton
+    --
+    + bind(word: Word): void
+}
+
+WordsAdapter --> WordsViewHolder : contains
+WordsViewHolder --> Word : binds
+
+class StudySet {
+    + id: Int
+    + name: String
+    + words: String
+    + language_to: String
+    + language_from: String
+    + amount_of_words: Int
+    + marked_words: String
+    + creator: String
+    + sync_status: Int
+}
+
+class StudySetRepository {
+    + allStudySets: LiveData<List<StudySet>>
+    + insert(studySet: StudySet): Long
+    + update(studySet: StudySet): void
+    + delete(studySet: StudySet): void
+    + getStudySetById(id: Long): StudySet?
+}
+
+CreateStudySetFragment --> CreateStudySetViewModel : uses
+CreateStudySetFragment --> WordsAdapter : uses
+CreateStudySetFragment --> StudySet : manages
+CreateStudySetViewModel --> StudySet : manages
+CreateStudySetViewModel --> StudySetRepository : uses
+
+class StudySetsAdapter {
+    - itemsList: List<StudySet>
+    - originalList: List<StudySet>
+    - filteredList: List<StudySet>
+    --
+    + onCreateViewHolder(parent: ViewGroup, viewType: Int): StudySetsHolder
+    + getItemCount(): Int
+    + onBindViewHolder(holder: StudySetsHolder, position: Int): void
+    + getFilter(): Filter
+    + updateList(newList: List<StudySet>): void
+}
+
+class StudySetsHolder {
+    - title: TextView
+    - amountOfWords: TextView
+    - delete: ImageButton
+    --
+    + bind(item: StudySet): void
+}
+
+class StudySetDiffCallback {
+    - oldList: List<StudySet>
+    - newList: List<StudySet>
+    --
+    + getOldListSize(): Int
+    + getNewListSize(): Int
+    + areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
+    + areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
+}
+
+interface Callback {
+    + onDeleteClicked(item: StudySet, position: Int): void
+    + onItemClicked(item: StudySet): void
+}
+
+StudySetsAdapter --> StudySetsHolder : contains
+StudySetsAdapter --> StudySetDiffCallback : uses
+StudySetsAdapter --> Callback : uses
+StudySetsAdapter --> StudySet : manages
+StudySetsHolder --> StudySet : binds
+StudySetDiffCallback --> StudySet : compares
+
+class ListenFragment {
+    - _binding: FragmentAudioStageBinding?
+    - binding: FragmentAudioStageBinding
+    - viewModel: ListenViewModel
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onDestroyView(): void
+}
+
+class ListenViewModel {
+    - wordList: List<Word>
+    - currentIndex: Int
+    - _currentWord: MutableLiveData<Word>
+    + currentWord: LiveData<Word>
+    --
+    + nextWord(): void
+}
+
+ListenFragment --> ListenViewModel : uses
+ListenViewModel --> Word : manages
+
+class SpeechStageFragment {
+    - _binding: FragmentSpeechStageBinding?
+    - binding: FragmentSpeechStageBinding
+    - viewModel: SpeechStageViewModel
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onDestroyView(): void
+}
+
+class SpeechStageViewModel {
+    - wordList: List<Word>
+    - currentIndex: Int
+    - _currentWord: MutableLiveData<Word>
+    + currentWord: LiveData<Word>
+    --
+    + nextWord(): void
+    + getExpectedTerm(): String?
+}
+
+SpeechStageFragment --> SpeechStageViewModel : uses
+SpeechStageViewModel --> Word : manages
+
+class StudySetsListFragment {
+    - _binding: FragmentStudySetsBinding?
+    - binding: FragmentStudySetsBinding
+    - viewModel: StudySetsListViewModel
+    - adapter: StudySetsAdapter
+    - fullList: List<StudySet>
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onDestroyView(): void
+    - updateFilteredList(query: String): void
+}
+
+class StudySetsListViewModel {
+    - _allStudySets: MutableLiveData<List<StudySet>>
+    + allStudySets: LiveData<List<StudySet>>
+    --
+    + StudySetsListViewModel(repository: StudySetRepository)
+    + deleteStudySet(studySet: StudySet): void
+}
+
+StudySetsListFragment --> StudySetsListViewModel : uses
+StudySetsListFragment --> StudySetsAdapter : uses
+StudySetsListFragment --> StudySet : manages
+StudySetsListViewModel --> StudySet : manages
+StudySetsListViewModel --> StudySetRepository : uses
+
+class TermStageFragment {
+    - _binding: FragmentTermDefinitionStageBinding?
+    - binding: FragmentTermDefinitionStageBinding
+    - viewModel: TermStageViewModel
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onDestroyView(): void
+}
+
+class TermStageViewModel {
+    - wordList: List<Word>
+    - currentIndex: Int
+    - _currentWord: MutableLiveData<Word>
+    + currentWord: LiveData<Word>
+    --
+    + checkAnswer(answer: String): void
+    - nextWord(): void
+}
+
+TermStageFragment --> TermStageViewModel : uses
+TermStageViewModel --> Word : manages
+
+class TranslationStageFragment {
+    - _binding: FragmentTermDefinitionStageBinding?
+    - binding: FragmentTermDefinitionStageBinding
+    - viewModel: TranslationStageViewModel
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onDestroyView(): void
+}
+
+class TranslationStageViewModel {
+    - wordList: List<Word>
+    - currentIndex: Int
+    - _currentWord: MutableLiveData<Word>
+    + currentWord: LiveData<Word>
+    --
+    + checkTranslationAnswer(answer: String): void
+    - nextWord(): void
+}
+
+TranslationStageFragment --> TranslationStageViewModel : uses
+TranslationStageViewModel --> Word : manages
+@enduml

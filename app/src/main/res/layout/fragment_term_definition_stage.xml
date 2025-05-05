@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/horizontalContentPadding"
     android:padding="15dp">
 
     <TextView
@@ -14,12 +14,15 @@
         android:textColor="@color/darkColor"
         android:textSize="20sp" />
 
-    <ImageButton
-        android:background="@null"
+    <ImageView
         android:id="@+id/volume_up_IB"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/term_TV"
+        android:layout_alignBottom="@+id/term_TV"
+        android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/term_TV"
+        android:background="@null"
         android:src="@drawable/ic_volume_up_blue_34dp" />
 
     <EditText
@@ -55,13 +58,4 @@
         android:textColor="@android:color/white"/>
 
 
-    <!--    <ImageButton-->
-<!--        android:background="@null"-->
-<!--        android:onClick="checkAnswerTermTranslation"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_below="@+id/answer_ET"-->
-<!--        android:id="@+id/next_page_BTN"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:srcCompat="@drawable/ic_arrow_forward_blue_24dp" />-->
 </RelativeLayout>

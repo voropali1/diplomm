@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class) // Доступен на уровне всего приложения
+@InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
     @Provides
@@ -30,3 +30,5 @@ object DatabaseModule {
         return database.studySetDao()
     }
 }
+
+

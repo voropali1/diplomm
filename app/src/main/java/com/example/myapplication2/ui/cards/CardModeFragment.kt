@@ -7,21 +7,32 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
-import com.example.myapplication2.R
 import com.example.myapplication2.adapters.CardsAdapter
+import com.example.myapplication2.databinding.ActivityCardModeBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CardModeFragment : Fragment() {
+
+    private var _binding: ActivityCardModeBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: CardModeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.activity_card_mode, container, false)
-        val viewPager = view.findViewById<ViewPager2>(R.id.cards_view_pager)
+    ): View {
+        _binding = ActivityCardModeBinding.inflate(inflater, container, false)
+
+        binding.cardsViewPager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    val allItems = binding.cardsViewPager.adapter?.itemCount ?: return
+                    binding.cardAmountTV.text = "${position + 1}/$allItems"
+                }
+            }
+        )
 
         val wordsString = arguments?.getString("wordsString")
         wordsString?.let {
@@ -29,10 +40,10 @@ class CardModeFragment : Fragment() {
         }
 
         viewModel.words.observe(viewLifecycleOwner) { wordList ->
-            viewPager.adapter = CardsAdapter(wordList, requireContext())
+            binding.cardsViewPager.adapter = CardsAdapter(wordList, requireContext())
         }
 
-        return view
+        return binding.root
     }
 }
 

@@ -30,13 +30,13 @@
 
     </RelativeLayout>
 
-    <com.example.myapplication2.base.NonSwipeableViewPager
+    <com.example.myapplication2.ui.base.NonSwipeableViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/progress_RL"
         android:layout_alignParentBottom="true">
 
-    </com.example.myapplication2.base.NonSwipeableViewPager>
+    </com.example.myapplication2.ui.base.NonSwipeableViewPager>
 
 </RelativeLayout>

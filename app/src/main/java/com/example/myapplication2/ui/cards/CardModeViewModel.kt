@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication2.base.Word
+import com.example.myapplication2.model.Word
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -1,0 +1,109 @@
+@startuml
+class BaseVariables {
+    {static} + LANGUAGES: List<String>
+    {static} + LANGUAGES_SHORT: List<String>
+}
+
+interface DaoStudySet {
+    + getAllStudySets(): LiveData<List<StudySet>>
+    + getAllStudySetsFlow(): Flow<List<StudySet>>
+    + insertStudySet(studySet: StudySet): Long
+    + updateStudySet(studySet: StudySet): void
+    + deleteStudySet(studySet: StudySet): void
+    + deleteById(id: Int): void
+    + getSpecificStudySet(id: Int): LiveData<StudySet>
+    + getNoLiveDataSpecificStudySet(id: Int): StudySet?
+    + getUnsyncedStudySet(): List<StudySet>
+    + upsert(studySets: List<StudySet>): void
+    + upsertStudySet(studySet: StudySet): void
+    + deleteAll(): void
+}
+
+class StudySetDatabase {
+    + studySetDao(): DaoStudySet
+}
+
+StudySetDatabase --> DaoStudySet : contains
+
+class DatabaseModule {
+    {static} + provideDatabase(context: Context): StudySetDatabase
+    {static} + provideDao(database: StudySetDatabase): DaoStudySet
+}
+
+class SharedPreferencesModule {
+    {static} + provideSharedPreferences(context: Context): SharedPreferences
+}
+
+DatabaseModule --> StudySetDatabase : provides
+DatabaseModule --> DaoStudySet : provides
+
+class NonSwipeableViewPager {
+    + NonSwipeableViewPager(context: Context)
+    + NonSwipeableViewPager(context: Context, attrs: AttributeSet?)
+    + onInterceptTouchEvent(event: MotionEvent): Boolean
+    + onTouchEvent(event: MotionEvent): Boolean
+}
+
+NonSwipeableViewPager ..|> ViewPager
+
+class MainActivity {
+    - binding: ActivityMainBinding
+    --
+    + onCreate(savedInstanceState: Bundle?): void
+    + onSupportNavigateUp(): Boolean
+}
+
+class MyApplication {
+    --
+    + onCreate(): void
+}
+
+
+class QuizViewModel {
+  + {static} Question
+  - _currentQuestion: MutableLiveData<Question>
+  + currentQuestion: LiveData<Question>
+  - questionList: List<Question>
+  - currentIndex: Int
+  + setQuestionsFromWords(words: List<Word>): Unit
+  + loadNextQuestion(): Unit
+  + checkAnswer(selected: String): Boolean
+}
+
+class Question {
+  + term: String
+  + correctAnswer: String
+  + options: List<String>
+}
+
+class QuizFragment {
+  - _binding: FragmentQuizStageBinding?
+  + binding: FragmentQuizStageBinding
+  - viewModel: QuizViewModel
+  - wordList: List<Word>
+  + onCreate(savedInstanceState: Bundle?): Unit
+  + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+  + onViewCreated(view: View, savedInstanceState: Bundle?): Unit
+  + onDestroyView(): Unit
+}
+
+QuizViewModel "1" *-- "0..N  " Question : contains
+QuizFragment --> QuizViewModel : uses >
+QuizFragment --> Question : uses >
+
+
+class NotificationsFragment {
+    - _binding: FragmentNotificationsBinding?
+    - binding: FragmentNotificationsBinding
+    --
+    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    + onDestroyView(): void
+}
+
+class NotificationsViewModel {
+    - _text: MutableLiveData<String>
+    + text: LiveData<String>
+}
+
+NotificationsFragment --> NotificationsViewModel : uses
+@enduml

@@ -4,6 +4,7 @@
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/horizontalContentPadding"
     android:padding="15dp"
     >
 
@@ -31,10 +32,9 @@
 
     </LinearLayout>
 
-
     <EditText
         android:id="@+id/definition_audiostage_ET"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cannot_speak_BTN"
         android:layout_marginTop="50dp"
@@ -45,21 +45,22 @@
         android:id="@+id/translationHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/definition_audiostage_ET"
         android:layout_below="@id/definition_audiostage_ET"
         android:letterSpacing="0.3"
         android:text="@string/translation"
         android:textColor="@color/darkColor" />
 
-    <ImageButton
+    <Button
         android:id="@+id/next_page_BTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/definition_audiostage_ET"
+        android:text="check"
+        android:layout_below="@id/translationHint"
+        android:layout_marginTop="12dp"
         android:layout_alignParentEnd="true"
-        android:background="@null"
-        android:onClick="checkAnswerAudioStage"
-        android:padding="10dp"
-        app:srcCompat="@drawable/ic_arrow_forward_blue_24dp" />
+        android:backgroundTint="@color/blue"
+        android:textColor="@android:color/white"/>
 
     <Button
         android:id="@+id/cannot_speak_BTN"

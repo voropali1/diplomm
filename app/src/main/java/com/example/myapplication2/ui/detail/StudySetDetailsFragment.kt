@@ -16,9 +16,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication2.R
 import com.example.myapplication2.adapters.SpecificStudySetAdapter
-import com.example.myapplication2.base.Word
+import com.example.myapplication2.model.Word
 import com.example.myapplication2.databinding.ActivitySpecificStudysetBinding
 import com.example.myapplication2.model.StudySet
+import com.example.myapplication2.utils.getTabletLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -57,7 +58,7 @@ class StudySetDetailsFragment : Fragment() {
                 allWords = wordsList
 
                 //wordsAdapter = SpecificStudySetAdapter(allWords, sharedPreferences)
-                binding.wordsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+                binding.wordsRecyclerview.layoutManager = requireContext().getTabletLayoutManager()
                 binding.wordsRecyclerview.adapter = wordsAdapter
             }
         }

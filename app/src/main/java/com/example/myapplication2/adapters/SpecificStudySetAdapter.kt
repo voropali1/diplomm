@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication2.R
-import com.example.myapplication2.base.Word
+import com.example.myapplication2.model.Word
 import javax.inject.Inject
 
 

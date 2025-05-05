@@ -1,27 +1,14 @@
 package com.langamy.adapters
 
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication2.R
-import com.example.myapplication2.base.Word
-import com.example.myapplication2.databinding.ListWordsItemBinding
-import androidx.recyclerview.widget.ListAdapter
-import com.example.myapplication2.model.StudySet
-
-
-import org.json.JSONException
-import org.json.JSONObject
-
-import java.util.*
+import com.example.myapplication2.model.Word
 
 class WordsAdapter : RecyclerView.Adapter<WordsAdapter.WordsHolder>() {
 

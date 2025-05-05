@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
     <RelativeLayout
         android:id="@+id/study_sets_header"
         android:layout_width="match_parent"
@@ -17,6 +15,7 @@
             android:id="@+id/searchDictation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/horizontalContentPadding"
             android:layout_alignParentTop="true"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
@@ -30,7 +29,7 @@
                 android:layout_toStartOf="@+id/search_dictation_btn"
                 android:backgroundTint="@color/darkColor"
                 android:ems="10"
-                android:hint="@string/enter_dictation_code"
+                android:hint="@string/study_set_search_placeholder"
                 android:inputType="textPersonName" />
 
             <com.google.android.material.button.MaterialButton
@@ -55,52 +54,6 @@
         android:text="@string/create_studyset"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:id="@+id/study_sets_action_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/study_sets_header"
-        android:paddingStart="50dp"
-        android:paddingEnd="50dp">
-
-        <ImageButton
-            android:id="@+id/dictations"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/bottom_border"
-            android:src="@drawable/ic_dictation_30dp"
-            app:tint="@color/lightDark"
-            android:importantForAccessibility="no"
-            android:minWidth="48dp"
-            android:minHeight="48dp"/>
-
-        <ImageButton
-            android:id="@+id/randomDictation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/bottom_border"
-            android:src="@drawable/ic_dice_black"
-            app:tint="@color/lightDark"
-            android:importantForAccessibility="no"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            />
-
-        <ImageButton
-            android:id="@+id/recent_dictations"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/bottom_border"
-            android:src="@drawable/ic_done_dictations_white_30dp"
-            app:tint="@color/lightDark"
-            android:importantForAccessibility="no"
-            android:minWidth="48dp"
-            android:minHeight="48dp"/>
-    </RelativeLayout>
-
     <!-- Добавлен TextView-заглушка -->
     <TextView
         android:id="@+id/textPlaceholder"
@@ -116,9 +69,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/study_sets_action_buttons"
         android:scrollbars="vertical"
+        android:layout_below="@+id/study_sets_header"
         android:importantForAccessibility="no"/>
 
-<!--    <include layout="@layout/custom_progress_bar"/>-->
 </RelativeLayout>

@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MyNoMaterialCardView"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="@dimen/horizontalContentPadding"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -36,6 +37,4 @@
             android:background="@null"
             android:src="@drawable/ic_volume_up_blue_60dp" />
     </RelativeLayout>
-
-
 </androidx.cardview.widget.CardView>

@@ -5,18 +5,22 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeech.OnInitListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication2.R
-import com.example.myapplication2.base.Word
+import com.example.myapplication2.model.Word
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class CardsAdapter(
     private val words: List<Word>,
@@ -36,8 +40,6 @@ class CardsAdapter(
         val volumeBtn: ImageButton = view.findViewById(R.id.volume_up_IB)
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_card, parent, false)
@@ -48,6 +50,11 @@ class CardsAdapter(
         val word = words[position]
         val isFlipped = flippedStates[position]
 
+        val padding = (context.resources.getDimension(R.dimen.cardHorizontalPadding) +
+                context.resources.getDimension(R.dimen.horizontalContentPadding)).roundToInt()
+        holder.cardView.updateLayoutParams<RecyclerView.LayoutParams> {
+            this.updateMargins(left = padding, right = padding)
+        }
         holder.cardText.text = if (isFlipped) word.translation else word.term
 
         holder.cardView.setOnClickListener {

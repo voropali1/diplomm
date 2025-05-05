@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/horizontalContentPadding"
     android:padding="15dp">
 
     <Chronometer
@@ -17,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_above="@+id/answers_LL"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="32dp">
 
         <TextView
             android:id="@+id/term_TV"
@@ -26,14 +27,13 @@
             android:padding="15dp"
             android:text="TextView"
             android:textColor="@color/darkColor"
-            android:textSize="20sp"
-            android:layout_weight="1" />
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/volume_up_IB"
             android:layout_width="55dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="55dp"
-            android:layout_marginStart="8dp"
             android:background="@null"
             android:src="@drawable/ic_volume_up_blue_34dp" />
     </LinearLayout>
