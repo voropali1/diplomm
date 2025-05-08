@@ -4,6 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/loginFragment">
+    <action
+        android:id="@+id/action_global_studySetsFragment"
+        app:destination="@id/fragment_study_sets" />
+    <action
+        android:id="@+id/action_global_createStudySetFragment"
+        app:destination="@id/create_study_set" />
+    <action
+        android:id="@+id/action_global_profileFragment"
+        app:destination="@id/profileFragment" />
 
     <fragment
         android:id="@+id/loginFragment"
@@ -24,6 +33,8 @@
         <action
             android:id="@+id/action_to_studySetDetailsFragment"
             app:destination="@id/studySetDetailsFragment"/>
+
+
     </fragment>
 
     <fragment
@@ -33,6 +44,7 @@
         <action
             android:id="@+id/action_createStudySetFragment_to_studySetDetailsFragment"
             app:destination="@id/studySetDetailsFragment" />
+
     </fragment>
 
     <fragment
@@ -44,6 +56,10 @@
             android:name="studySet"
             app:argType="com.example.myapplication2.model.StudySet"
             app:nullable="true"/>
+
+        <action
+            android:id="@+id/action_to_profileFragment"
+            app:destination="@id/profileFragment" />
 
         <action
             android:id="@+id/action_studySetDetailsFragment_to_cardModeFragment"
@@ -74,10 +90,7 @@
 
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.myapplication2.ui.notifications.NotificationsFragment"
-        tools:layout="@layout/fragment_notifications" />
+
 
     <fragment
         android:id="@+id/cardModeFragment"
@@ -139,6 +152,17 @@
             android:name="words"
             app:argType="com.example.myapplication2.model.Word"
             app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.myapplication2.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_createStudySetFragment_to_studySetDetailsFragment"
+            app:destination="@id/studySetDetailsFragment" />
+
     </fragment>
 
 

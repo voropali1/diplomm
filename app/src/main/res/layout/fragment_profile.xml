@@ -1,61 +1,70 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_100"
-    android:orientation="vertical">
+    android:padding="16dp">
 
-    <RelativeLayout
-        android:id="@+id/user_info_LL"
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-
-            android:layout_height="75dp"
-            android:layout_alignParentStart="true"
-            android:background="@color/blue">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-
-            android:layout_height="75dp"
-            android:layout_alignParentBottom="true">
-
-        </LinearLayout>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="75dp"
-            android:id="@+id/account_image"
-            android:layout_height="75dp"
-      />
-
-        <TextView
-            android:id="@+id/user_email_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/account_image"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:letterSpacing="0.2"
-            android:text="EMAIL"
-            android:textColor="@color/blue"
-            android:textSize="15sp" />
-    </RelativeLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/sign_out_btn"
-        style="@style/WhiteButtonWithBlueBorder"
+    <!-- Имя пользователя -->
+    <TextView
+        android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:text="Имя пользователя"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:paddingBottom="20dp"/>
+
+    <!-- Количество изученных терминов -->
+    <TextView
+        android:id="@+id/termsCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Изучено терминов: 0"
+        android:textSize="18sp"
+        android:layout_below="@id/usernameTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Пройденные сеты -->
+    <TextView
+        android:id="@+id/completedSetsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Пройдено сетов: 0"
+        android:textSize="18sp"
+        android:layout_below="@id/termsCountTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Процент завершенности -->
+    <TextView
+        android:id="@+id/progressPercentageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Прогресс: 0%"
+        android:textSize="18sp"
+        android:layout_below="@id/completedSetsTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Полоса прогресса -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progressPercentageTextView"
+        android:layout_marginTop="20dp"
+        android:progress="0"
+        android:max="100"/>
+
+    <!-- Кнопка Sign Out -->
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/sign_out"
-        app:cornerRadius="3dp" />
-
-
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:background="@color/colorAccent" />
 </RelativeLayout>
