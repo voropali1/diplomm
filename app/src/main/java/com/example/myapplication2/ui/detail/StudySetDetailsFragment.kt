@@ -34,6 +34,7 @@ class StudySetDetailsFragment : Fragment() {
     private var studySet: StudySet? = null
     private lateinit var wordsAdapter: SpecificStudySetAdapter
     private lateinit var allWords: List<Word>
+    private var currentSet: StudySet? = null
     @Inject lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,7 @@ class StudySetDetailsFragment : Fragment() {
 
         arguments?.let {
             studySet = it.getSerializable("studySet") as? StudySet
+            currentSet = studySet
             studySet?.let { set ->
                 Log.d("StudySetDetailsFragment", "Received words string: ${set.words}")
 
@@ -122,13 +124,15 @@ class StudySetDetailsFragment : Fragment() {
         binding.speakBtn.setOnClickListener {
             if (allWords.isNotEmpty()) {
                 val bundle = Bundle().apply {
-                    putSerializable("words", ArrayList(allWords)) // Word реализует Serializable
+                    putSerializable("words", ArrayList(allWords)) // Word должен быть Serializable
+                    putSerializable("studySet", currentSet) // <-- добавляем StudySet
                 }
                 findNavController().navigate(R.id.speechFragment, bundle)
             } else {
                 Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
             }
         }
+
 
 
 

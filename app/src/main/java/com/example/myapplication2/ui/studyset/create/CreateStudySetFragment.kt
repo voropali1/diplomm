@@ -73,6 +73,7 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
         binding.addWordBtn.setOnClickListener {
             wordsAdapter.addWord(Word("", ""))
             binding.wordsRecyclerview.scrollToPosition(wordsAdapter.itemCount - 1)
+            Toast.makeText(requireContext(), languageFrom + languageTo, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,8 +92,8 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
             existingSet?.apply {
                 this.name = name
                 this.words = wordsString
-                this.language_to = languageTo
-                this.language_from = languageFrom
+                this.language_to = languageTo  // Убедитесь, что язык правильно сохраняется
+                this.language_from = languageFrom  // Убедитесь, что язык правильно сохраняется
                 this.amount_of_words = wordsAdapter.itemCount
             }
         } else {
@@ -102,10 +103,14 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
                 name = name,
                 words = wordsString,
                 marked_words = existingSet?.marked_words ?: "",
-                language_to = languageTo,
-                language_from = languageFrom,
+                language_to = languageTo,  // Убедитесь, что язык правильно сохраняется
+                language_from = languageFrom,  // Убедитесь, что язык правильно сохраняется
                 amount_of_words = wordsAdapter.itemCount
+
             )
+
+
+
         }
 
         Log.d("CreateStudySetFragment", "Saving study set: $studySet")
@@ -134,11 +139,8 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
                 Log.e("CreateStudySetFragment", "Error while saving study set", e)
             }
         }
-
-
-
-
     }
+
 
 
     private fun fillFieldsForEditing(set: StudySet) {
