@@ -71,6 +71,7 @@ class StudySetDetailsFragment : Fragment() {
             if (word != null) {
                 val bundle = Bundle().apply {
                     putSerializable("words", ArrayList(allWords))
+                    putSerializable("studySet", currentSet)
                 }
 
                 findNavController().navigate(R.id.definitionTermStageFragment, bundle)
@@ -84,6 +85,8 @@ class StudySetDetailsFragment : Fragment() {
             if (word != null) {
                 val bundle = Bundle().apply {
                     putSerializable("words", ArrayList(allWords))
+                    putSerializable("studySet", currentSet)
+
                 }
 
                 findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
@@ -98,16 +101,17 @@ class StudySetDetailsFragment : Fragment() {
 
             val bundle = Bundle().apply {
                 putString("wordsString", wordsString)
+                putSerializable("studySet", currentSet)
             }
+            findNavController().navigate(R.id.action_studySetDetailsFragment_to_cardModeFragment, bundle)
 
-            val action = StudySetDetailsFragmentDirections.actionStudySetDetailsFragmentToCardModeFragment(wordsString)
-            findNavController().navigate(action)
 
         }
 
-        binding.learnBtn.setOnClickListener {
+        binding.quizBtn.setOnClickListener {
             val bundle = Bundle().apply {
-                putSerializable("words", ArrayList(allWords)) // Word должен быть Serializable
+                putSerializable("words", ArrayList(allWords))
+                // Word должен быть Serializable
             }
 
             findNavController().navigate(R.id.quizFragment, bundle)

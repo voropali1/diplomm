@@ -18,16 +18,20 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication2.R
+import com.example.myapplication2.databinding.ItemCardBinding
 import com.example.myapplication2.model.Word
 import java.util.Locale
 import kotlin.math.roundToInt
 
 class CardsAdapter(
     private val words: List<Word>,
-    private val context: Context
+    private val context: Context,
+    private val languageFrom: String,  // Язык термина
+    private val languageTo: String     // Язык перевода
 ) : RecyclerView.Adapter<CardsAdapter.CardViewHolder>(), TextToSpeech.OnInitListener {
 
     private var tts: TextToSpeech? = null
+    private var isTtsInitialized = false
     private val flippedStates = BooleanArray(words.size) { false }
 
     init {
@@ -55,8 +59,10 @@ class CardsAdapter(
         holder.cardView.updateLayoutParams<RecyclerView.LayoutParams> {
             this.updateMargins(left = padding, right = padding)
         }
+
         holder.cardText.text = if (isFlipped) word.translation else word.term
 
+        // Переворот карточки
         holder.cardView.setOnClickListener {
             val adapterPosition = holder.adapterPosition
             if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
@@ -73,7 +79,8 @@ class CardsAdapter(
                     if (newPos == RecyclerView.NO_POSITION) return
 
                     flippedStates[newPos] = !flippedStates[newPos]
-                    holder.cardText.text = if (flippedStates[newPos]) word.translation else word.term
+                    val isNowFlipped = flippedStates[newPos]
+                    holder.cardText.text = if (isNowFlipped) word.translation else word.term
 
                     flipIn.start()
                 }
@@ -82,25 +89,36 @@ class CardsAdapter(
             flipOut.start()
         }
 
+        // Озвучка текста
         holder.volumeBtn.setOnClickListener {
-            tts?.speak(word.term, TextToSpeech.QUEUE_FLUSH, null, null)
+            val isFlippedNow = flippedStates[holder.adapterPosition]
+            val textToSpeak = if (isFlippedNow) word.translation else word.term
+            val langTag = if (isFlippedNow) languageTo else languageFrom
+
+            if (isTtsInitialized) {
+                val locale = Locale.forLanguageTag(langTag)
+                val result = tts?.setLanguage(locale)
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(context, "Язык $langTag не поддерживается", Toast.LENGTH_SHORT).show()
+                } else {
+                    tts?.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null)
+                }
+            }
         }
     }
-
-
-
 
     override fun getItemCount(): Int = words.size
 
     override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            tts?.language = Locale.US
-        } else {
+        isTtsInitialized = status == TextToSpeech.SUCCESS
+        tts?.setSpeechRate(0.7f)
+        if (!isTtsInitialized) {
             Toast.makeText(context, "Ошибка инициализации TTS", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun stopTTS() {
+        tts?.stop()
         tts?.shutdown()
     }
 
@@ -108,4 +126,5 @@ class CardsAdapter(
         stopTTS()
     }
 }
+
 

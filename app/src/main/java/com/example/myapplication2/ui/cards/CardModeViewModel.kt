@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,6 +16,8 @@ class CardModeViewModel @Inject constructor(
 
     private val _words = MutableLiveData<List<Word>>()
     val words: LiveData<List<Word>> = _words
+    private val _currentStudySet = MutableLiveData<StudySet>()
+    val currentStudySet: LiveData<StudySet> get() = _currentStudySet
 
     fun loadWords(rawString: String) {
         val parsedWords = rawString.lines().mapNotNull { line ->
@@ -26,5 +29,14 @@ class CardModeViewModel @Inject constructor(
             } else null
         }
         _words.value = parsedWords
+    }
+
+    fun setCurrentStudySet(studySet: StudySet) {
+        _currentStudySet.value = studySet
+    }
+
+    // Метод для получения текущего сета
+    fun getCurrentStudySet(): StudySet? {
+        return _currentStudySet.value
     }
 }

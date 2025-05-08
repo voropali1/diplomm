@@ -1,5 +1,6 @@
 package com.example.myapplication2.ui.quiz
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,6 +45,7 @@ class QuizViewModel @Inject constructor() : ViewModel() {
         loadNextQuestion()
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun loadNextQuestion() {
         if (currentIndex < questionList.size) {
             _currentQuestion.value = questionList[currentIndex]

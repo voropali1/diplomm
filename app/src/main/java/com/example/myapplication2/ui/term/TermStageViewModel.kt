@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,6 +16,8 @@ class TermStageViewModel @Inject constructor(
 
     private val wordList: List<Word> = (savedStateHandle.get<ArrayList<Word>>("words") ?: arrayListOf())
     private var currentIndex = 0
+    private val _currentStudySet = MutableLiveData<StudySet>()
+    val currentStudySet: LiveData<StudySet> get() = _currentStudySet
 
     private val _currentWord = MutableLiveData<Word>()
     val currentWord: LiveData<Word> = _currentWord
@@ -39,6 +42,15 @@ class TermStageViewModel @Inject constructor(
         } else {
             // Можно показать "Конец"
         }
+    }
+
+    fun setCurrentStudySet(studySet: StudySet) {
+        _currentStudySet.value = studySet
+    }
+
+    // Метод для получения текущего сета
+    fun getCurrentStudySet(): StudySet? {
+        return _currentStudySet.value
     }
 }
 

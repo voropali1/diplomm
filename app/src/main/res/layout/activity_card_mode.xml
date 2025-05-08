@@ -7,7 +7,6 @@
     android:clipChildren="false"
     android:animateLayoutChanges="true">
 
-    <!-- Панель управления (кнопки и текст) -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,17 +14,9 @@
         android:id="@+id/card_mode_action_RL"
         android:layout_alignParentTop="true">
 
-        <ImageButton
-            android:id="@+id/volume_up_IB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_volume_off_blue_34dp"
-            android:background="@null"/>
-
         <TextView
             android:id="@+id/card_amount_TV"
-            android:layout_toStartOf="@+id/volume_up_IB"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,12 +30,12 @@
             android:id="@+id/undo_card_IB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/card_amount_TV"
+            android:layout_toStartOf="@id/card_amount_TV"
             android:layout_marginEnd="20dp"
             android:src="@drawable/ic_undo_blue_34dp"
             android:background="@null"/>
-
     </RelativeLayout>
+
 
     <!-- ViewPager2 для отображения карточек -->
     <androidx.viewpager2.widget.ViewPager2

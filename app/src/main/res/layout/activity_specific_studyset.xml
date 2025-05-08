@@ -111,7 +111,7 @@
                             android:textSize="12sp"/>
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/learn_btn"
+                            android:id="@+id/quiz_btn"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

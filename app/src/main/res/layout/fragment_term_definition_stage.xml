@@ -6,24 +6,28 @@
 
     <TextView
         android:id="@+id/term_TV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
+        android:layout_toStartOf="@+id/volume_up_IB"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"
         android:text="Term"
         android:textColor="@color/darkColor"
         android:textSize="20sp" />
 
+
     <ImageView
         android:id="@+id/volume_up_IB"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignTop="@+id/term_TV"
-        android:layout_alignBottom="@+id/term_TV"
-        android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/term_TV"
+        android:layout_alignParentEnd="true"
         android:background="@null"
         android:src="@drawable/ic_volume_up_blue_34dp" />
+
+
 
     <EditText
         android:focusable="true"

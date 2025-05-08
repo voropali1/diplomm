@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication2.adapters.CardsAdapter
 import com.example.myapplication2.databinding.ActivityCardModeBinding
+import com.example.myapplication2.model.StudySet
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,9 +40,15 @@ class CardModeFragment : Fragment() {
             viewModel.loadWords(it)
         }
 
+        val studySet = arguments?.getSerializable("studySet") as? StudySet
+        val languageFrom = studySet?.language_from ?: "en"
+        val languageTo = studySet?.language_to ?: "en"
+
         viewModel.words.observe(viewLifecycleOwner) { wordList ->
-            binding.cardsViewPager.adapter = CardsAdapter(wordList, requireContext())
+            binding.cardsViewPager.adapter =
+                CardsAdapter(wordList, requireContext(), languageFrom, languageTo)
         }
+
 
         return binding.root
     }
