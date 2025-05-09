@@ -1,4 +1,4 @@
-package com.langamy.adapters
+package com.example.myapplication2.adapters
 
 import android.text.Editable
 import android.text.TextWatcher

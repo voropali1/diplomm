@@ -32,7 +32,7 @@
     <string name="amount_of_words">Amount of words: %1$s</string>
     <string name="enable_auto_translate">Enable auto translate</string>
 
-    <string name="commit_words">Commit words</string>
+    <string name="translate_words">Translate words</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="study_set_search_placeholder">Enter study set name</string>
     <string name="term">Term</string>

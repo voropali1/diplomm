@@ -53,10 +53,14 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.play.services.mlkit.text.recognition.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.text.recognition)
+    implementation(libs.android.image.cropper)
+    implementation(libs.translate)
 
     // Dagger Hilt
     implementation(libs.hilt.android)

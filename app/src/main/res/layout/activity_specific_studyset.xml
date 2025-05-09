@@ -36,13 +36,12 @@
                     android:gravity="center"
                     android:padding="3dp">
 
-                    <!-- Верхний ряд (2 кнопки) -->
+                    <!-- Верхний ряд (3 кнопки) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="3"
-                        android:layout_marginBottom="2dp"
                         android:gravity="center">
 
                         <com.google.android.material.button.MaterialButton
@@ -51,10 +50,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="3dp"
+                            android:layout_margin="2dp"
                             android:text="@string/term"
                             android:backgroundTint="@color/pastel_blue_deep"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/translation_btn"
@@ -62,22 +61,21 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="3dp"
-                            android:layout_marginEnd="3dp"
+                            android:layout_margin="2dp"
                             android:text="@string/translation"
                             android:backgroundTint="@color/blue_50"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/speak_btn"
                             style="@style/WhiteButtonWithBlueBorder"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="3dp"
-                            android:layout_marginEnd="3dp"
+                            android:layout_margin="2dp"
                             android:text="@string/speak"
                             android:backgroundTint="@color/pastel_blue_deep"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <!-- Нижний ряд (3 кнопки) -->
@@ -86,8 +84,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="3"
-                        android:gravity="center"
-                        android:layout_marginBottom="3dp">
+                        android:gravity="center">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/listen_btn"
@@ -95,29 +92,30 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="3dp"
+                            android:layout_margin="2dp"
                             android:text="@string/listen"
                             android:backgroundTint="@color/green"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/cards_btn"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="3dp"
+                            android:layout_margin="2dp"
                             android:text="@string/cards"
                             android:backgroundTint="@color/blue_400"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/quiz_btn"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_margin="2dp"
                             android:text="@string/quiz"
                             android:backgroundTint="@color/pastel_mint_deep"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <!-- Кнопки: Учить всё / Учить с отметкой -->
@@ -127,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:visibility="visible"
-                        android:layout_marginTop="0dp">
+                        android:layout_marginTop="3dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/study_all_MBTN"
@@ -135,7 +133,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="0dp"
+                            android:layout_margin="3dp"
                             android:text="@string/study_all"
                             android:backgroundTint="@color/blue"
                             android:textColor="#fff"
@@ -149,12 +147,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_margin="3dp"
                             android:text="@string/study_marked"
                             android:textSize="12sp"
                             app:cornerRadius="0dp"
                             app:strokeColor="@color/blue" />
                     </LinearLayout>
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
             <!-- RecyclerView -->

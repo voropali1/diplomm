@@ -18,7 +18,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ProfileViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,33 +31,27 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Пример получения данных из ViewModel
-        viewModel.userProfile.observe(viewLifecycleOwner) { profile ->
-            binding.usernameTextView.text = profile.username
-            binding.termsCountTextView.text = "Изучено терминов: ${profile.termsCount}"
+        profileViewModel.userProfile.observe(viewLifecycleOwner) { profile ->
+            binding.usernameTextView.text = "Привет, ${profile.username}!"
             binding.completedSetsTextView.text = "Пройдено сетов: ${profile.completedSets}"
-            binding.progressPercentageTextView.text = "Прогресс: ${profile.progress}%"
-            binding.progressBar.progress = profile.progress
         }
 
-        // Обработка нажатия кнопки "Sign Out"
         binding.signOutButton.setOnClickListener {
-            // Логика выхода из аккаунта
-            signOut()
+            findNavController().navigate(R.id.loginFragment)
         }
+
+
     }
 
-    private fun signOut() {
-        // Пример выхода из аккаунта. Очистка SharedPreferences или другого хранилища данных
-        val preferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        preferences.edit().clear().apply()
 
-        // Навигация обратно на экран входа
-        findNavController().navigate(R.id.profileFragment)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
+
+
+
+

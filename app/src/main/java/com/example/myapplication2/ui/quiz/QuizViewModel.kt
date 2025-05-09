@@ -4,9 +4,15 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
+import com.example.myapplication2.repository.StudySetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
 
 @HiltViewModel
 class QuizViewModel @Inject constructor() : ViewModel() {
@@ -60,4 +66,6 @@ class QuizViewModel @Inject constructor() : ViewModel() {
         return selected == _currentQuestion.value?.correctAnswer
     }
 }
+
+
 

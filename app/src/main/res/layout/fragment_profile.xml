@@ -1,7 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <!-- Имя пользователя -->
     <TextView
@@ -10,20 +13,10 @@
         android:layout_height="wrap_content"
         android:text="Имя пользователя"
         android:textSize="24sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="20dp"/>
-
-    <!-- Количество изученных терминов -->
-    <TextView
-        android:id="@+id/termsCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Изучено терминов: 0"
-        android:textSize="18sp"
-        android:layout_below="@id/usernameTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Пройденные сеты -->
     <TextView
@@ -32,39 +25,23 @@
         android:layout_height="wrap_content"
         android:text="Пройдено сетов: 0"
         android:textSize="18sp"
-        android:layout_below="@id/termsCountTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        app:layout_constraintTop_toBottomOf="@id/usernameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
-    <!-- Процент завершенности -->
-    <TextView
-        android:id="@+id/progressPercentageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Прогресс: 0%"
-        android:textSize="18sp"
-        android:layout_below="@id/completedSetsTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
-
-    <!-- Полоса прогресса -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/progressPercentageTextView"
-        android:layout_marginTop="20dp"
-        android:progress="0"
-        android:max="100"/>
-
-    <!-- Кнопка Sign Out -->
+    <!-- Кнопка выхода -->
     <Button
         android:id="@+id/signOutButton"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/sign_out"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/white"
-        android:background="@color/colorAccent" />
-</RelativeLayout>
+        android:backgroundTint="@color/blue"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

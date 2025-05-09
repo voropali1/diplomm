@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/create_study_set_LL"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:padding="10dp"
+  >
+
+  <EditText
+    android:id="@+id/title_edittext"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/horizontalContentPadding"
+    android:hint="@string/title"
+    android:minHeight="48dp"
+    />
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/horizontalContentPadding"
+    >
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+      <TextView
+        android:id="@+id/from_language_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/from"
+        />
+
+      <Spinner
+        android:id="@+id/language_form_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:orientation="vertical"
+      >
+
+      <TextView
+        android:id="@+id/to_language_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/to"
+        />
+
+      <Spinner
+        android:id="@+id/language_to_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"
+        />
+    </LinearLayout>
+  </RelativeLayout>
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/scan_document_btn"
+    style="@style/WhiteButtonWithBlueBorder"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/scan_document"
+    />
+
+  <LinearLayout
+    android:id="@+id/result_LL"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/result"
+      android:textSize="20sp"
+      />
+
+    <EditText
+      android:id="@+id/resultEt"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/edittext_background"
+      android:maxLines="4"
+      android:minHeight="48dp"
+      android:padding="5dp"
+      android:textColor="#000"
+      />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/commit_words_btn"
+      style="@style/WhiteButtonWithBlueBorder"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:backgroundTint="@color/green"
+      android:text="@string/translate_words"
+      />
+  </LinearLayout>
+</LinearLayout>

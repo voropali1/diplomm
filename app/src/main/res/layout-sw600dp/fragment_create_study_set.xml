@@ -105,6 +105,14 @@
                 android:minHeight="48dp"
                 android:padding="5dp"
                 android:textColor="#000" />
+
+            <com.google.android.material.button.MaterialButton
+              android:id="@+id/commit_words_btn"
+              style="@style/WhiteButtonWithBlueBorder"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:backgroundTint="@color/green"
+              android:text="@string/translate_words" />
         </LinearLayout>
     </LinearLayout>
 

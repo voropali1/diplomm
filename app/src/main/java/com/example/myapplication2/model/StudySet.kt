@@ -26,6 +26,9 @@ class StudySet : Serializable {
     @ColumnInfo(defaultValue = "0")
     var sync_status: Int = 0 // Добавляем эту колонку
 
+    @ColumnInfo(defaultValue = "false")
+    var isFinished: Boolean = false
+
     constructor(
         creator: String?,
         name: String?,
@@ -34,6 +37,7 @@ class StudySet : Serializable {
         language_to: String?,
         language_from: String?,
         amount_of_words: Int,
+        isFinished: Boolean = false
 
 
     ) {
@@ -44,6 +48,7 @@ class StudySet : Serializable {
         this.language_to = language_to
         this.language_from = language_from
         this.amount_of_words = amount_of_words
+        this.isFinished = isFinished
 
     }
 
