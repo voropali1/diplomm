@@ -13,8 +13,10 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication2.databinding.FragmentTermDefinitionStageBinding
 import com.example.myapplication2.model.StudySet
+import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 @AndroidEntryPoint
@@ -24,6 +26,7 @@ class TermStageFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: TermStageViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     private lateinit var tts: TextToSpeech
     private var currentLanguageTag: String? = null
@@ -34,14 +37,13 @@ class TermStageFragment : Fragment() {
     ): View {
         _binding = FragmentTermDefinitionStageBinding.inflate(inflater, container, false)
 
-        // Получаем сет и язык
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
         receivedSet?.let {
             viewModel.setCurrentStudySet(it)
             currentLanguageTag = it.language_to
         }
 
-        // Инициализируем TextToSpeech
+        // Инициализация TextToSpeech
         tts = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 currentLanguageTag?.let { langTag ->
@@ -56,19 +58,31 @@ class TermStageFragment : Fragment() {
             }
         }
 
-        // Отображаем текущее слово
+        // Наблюдение за текущим словом
         viewModel.currentWord.observe(viewLifecycleOwner) { word ->
             binding.termTV.text = word.translation
         }
 
-        // Озвучка
+        // Наблюдение за завершением режима
+        viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
+            if (completed) {
+                // Проверяем, был ли сет уже завершён
+                val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
+                if (studySet != null && !studySet.isFinished) {
+                    // Обновляем статус завершённости сета
+                    profileViewModel.updateCompletedSets(true)
+                    // Здесь можно обновить флаг completed в вашем объекте StudySet, если это нужно
+                    studySet.isFinished = true
+                }
+            }
+        }
+
         binding.volumeUpIB.setOnClickListener {
             val wordToSpeak = binding.termTV.text.toString()
             speakWord(wordToSpeak)
             Toast.makeText(requireContext(), "Используется язык: $currentLanguageTag", Toast.LENGTH_SHORT).show()
         }
 
-        // Проверка ответа
         binding.checkAnswerBtn.setOnClickListener {
             val answer = binding.answerET.text.toString()
             viewModel.checkAnswer(answer)
@@ -91,3 +105,5 @@ class TermStageFragment : Fragment() {
         tts.shutdown()
     }
 }
+
+

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.UserProfile
 import com.example.myapplication2.repository.UserProfileRepository
 
@@ -31,7 +32,7 @@ class ProfileViewModel @Inject constructor(
         _userProfile.value = UserProfile(username, completedSets)
     }
 
-    // Обновление информации о пройденных сетах
+    // Обновление количества завершённых сетов
     fun updateCompletedSets(isSetCompletedSuccessfully: Boolean) {
         if (isSetCompletedSuccessfully) {
             val updatedProfile = _userProfile.value?.copy(
@@ -52,7 +53,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
 }
-
 
 
 
