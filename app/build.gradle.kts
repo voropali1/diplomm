@@ -57,10 +57,17 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
+
 
     implementation(libs.text.recognition)
     implementation(libs.android.image.cropper)
     implementation(libs.translate)
+    implementation(libs.mpandroidchart)
+
+
+
+
 
     // Dagger Hilt
     implementation(libs.hilt.android)

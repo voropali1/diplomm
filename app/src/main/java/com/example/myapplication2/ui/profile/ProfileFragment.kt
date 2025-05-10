@@ -1,16 +1,23 @@
 package com.example.myapplication2.ui.profile
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.R
 import com.example.myapplication2.databinding.FragmentProfileBinding
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.AndroidEntryPoint
+
+
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -32,9 +39,13 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         profileViewModel.userProfile.observe(viewLifecycleOwner) { profile ->
-            binding.usernameTextView.text = "Привет, ${profile.username}!"
-            binding.completedSetsTextView.text = "Пройдено сетов: ${profile.completedSets}"
+            profileViewModel.totalSets.observe(viewLifecycleOwner) { total ->
+                binding.usernameTextView.text = "Hello, ${profile.username}!"
+                binding.completedSetsTextView.text = "Completed sets: ${profile.completedSets}/$total"
+                updateChart(profile.completedSets, total)
+            }
         }
+
 
         binding.signOutButton.setOnClickListener {
             findNavController().navigate(R.id.loginFragment)
@@ -42,6 +53,37 @@ class ProfileFragment : Fragment() {
 
 
     }
+
+    private fun updateChart(completed: Int, total: Int) {
+        val pieChart = binding.progressPieChart
+
+        val entries = ArrayList<PieEntry>()
+        entries.add(PieEntry(completed.toFloat(), ""))
+        entries.add(PieEntry((total - completed).toFloat(), ""))
+
+
+        val dataSet = PieDataSet(entries, "")
+        dataSet.colors = listOf(
+            ContextCompat.getColor(requireContext(), R.color.green),
+            ContextCompat.getColor(requireContext(), R.color.blue_300)
+        )
+        dataSet.valueTextColor = Color.WHITE
+        dataSet.valueTextSize = 14f
+        dataSet.setDrawValues(false)
+
+        val data = PieData(dataSet)
+
+        pieChart.data = data
+        pieChart.description.isEnabled = false
+        pieChart.isRotationEnabled = false
+        pieChart.centerText = "${(completed * 100 / total)}%"
+        pieChart.setCenterTextSize(18f)
+        pieChart.setHoleColor(Color.TRANSPARENT)
+        pieChart.setUsePercentValues(false)
+        pieChart.legend.isEnabled = false
+        pieChart.invalidate() // обновить
+    }
+
 
 
 

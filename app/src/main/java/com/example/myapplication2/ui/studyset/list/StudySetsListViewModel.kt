@@ -7,18 +7,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.repository.StudySetRepository
+import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class StudySetsListViewModel @Inject constructor(
-    private val repository: StudySetRepository
+    private val repository: StudySetRepository,
 ) : ViewModel() {
 
     // LiveData для хранения списка сетов
     private val _allStudySets = MutableLiveData<List<StudySet>>()
     val allStudySets: LiveData<List<StudySet>> get() = _allStudySets
+    private lateinit var profileViewModel: ProfileViewModel
 
     init {
         // Загружаем данные из репозитория в LiveData

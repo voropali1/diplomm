@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.adapters.StudySetsAdapter
 import com.example.myapplication2.databinding.FragmentStudySetsBinding
 import com.example.myapplication2.model.StudySet
+import com.example.myapplication2.ui.profile.ProfileViewModel
 import com.example.myapplication2.utils.isTablet
 import com.example.myapplication2.utils.getTabletLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,8 @@ class StudySetsListFragment : Fragment() {
     private val viewModel: StudySetsListViewModel by viewModels()
     private lateinit var adapter: StudySetsAdapter
     private var fullList: List<StudySet> = emptyList() // Полный список сетов
+    private val profileViewModel: ProfileViewModel by viewModels() // добавь это
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +40,9 @@ class StudySetsListFragment : Fragment() {
             itemsList = emptyList(),  // Указываем пустой список типа List<StudySet>
             callback = object : StudySetsAdapter.Callback {
                 override fun onDeleteClicked(item: StudySet, position: Int) {
+                    if (item.isFinished) {
+                        profileViewModel.decreaseCompletedSets()
+                    }
                     viewModel.deleteStudySet(item)
                 }
 

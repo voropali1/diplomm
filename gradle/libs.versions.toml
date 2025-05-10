@@ -19,6 +19,7 @@ hilt = "2.50"  # Добавляем версию Hilt сюда
 textRecognition = "16.0.1"
 translate = "17.0.3"
 playServicesMlkitTextRecognitionCommon = "19.1.0"
+mpandroidchart = "3.1.0"
 
 [libraries]
 android-image-cropper = { module = "com.vanniktech:android-image-cropper", version.ref = "androidImageCropper" }
@@ -40,6 +41,7 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.r
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
 translate = { module = "com.google.mlkit:translate", version.ref = "translate" }
 play-services-mlkit-text-recognition-common = { group = "com.google.android.gms", name = "play-services-mlkit-text-recognition-common", version.ref = "playServicesMlkitTextRecognitionCommon" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
