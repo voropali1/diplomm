@@ -61,5 +61,36 @@
         android:backgroundTint="@color/blue"
         android:textColor="@android:color/white"/>
 
+    <LinearLayout
+        android:id="@+id/emojiContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkAnswerBtn"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/emojiTextTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Correct"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageView
+            android:id="@+id/emojiIV"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+
+
+
+
+
 
 </RelativeLayout>

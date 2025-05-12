@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.Navigation.findNavController
+
+
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
 import com.example.myapplication2.repository.StudySetRepository
@@ -15,7 +18,13 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class QuizViewModel @Inject constructor() : ViewModel() {
+class QuizViewModel @Inject constructor(private val repository: StudySetRepository,) : ViewModel() {
+
+    private val _isCompleted = MutableLiveData<Boolean>()
+    val isCompleted: LiveData<Boolean> get() = _isCompleted
+
+    private val _currentStudySet = MutableLiveData<StudySet>()
+    val currentStudySet: LiveData<StudySet> get() = _currentStudySet
 
     data class Question(
         val term: String,
@@ -57,13 +66,29 @@ class QuizViewModel @Inject constructor() : ViewModel() {
             _currentQuestion.value = questionList[currentIndex]
             currentIndex++
         } else {
-            // Можно добавить обработку окончания викторины
-            _currentQuestion.value = null
+            viewModelScope.launch {
+                onCardsModeCompleted()
+            }
         }
     }
 
     fun checkAnswer(selected: String): Boolean {
         return selected == _currentQuestion.value?.correctAnswer
+    }
+
+    fun setCurrentStudySet(studySet: StudySet) {
+        _currentStudySet.value = studySet
+    }
+
+    // Добавляем метод для получения текущего StudySet
+    fun getCurrentStudySet(): StudySet? {
+        return _currentStudySet.value
+    }
+
+    private suspend fun onCardsModeCompleted() {
+        val setId = _currentStudySet.value?.id ?: return
+        repository.updateSetFinishedStatus(setId)
+        _isCompleted.postValue(true)
     }
 }
 

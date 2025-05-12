@@ -35,18 +35,20 @@ class TranslationStageViewModel @Inject constructor(
         }
     }
 
-    fun checkTranslationAnswer(answer: String) {
+    fun checkAnswer(answer: String): Boolean {
         val correct = currentWord.value?.translation.equals(answer.trim(), ignoreCase = true)
-        if (correct) {
-            nextWord()
-        }
+        //if (correct) {
+        //    nextWord()
+        //}
+        return correct
     }
 
-    private fun nextWord() {
+    fun nextWord() {
         if (currentIndex + 1 < wordList.size) {
             currentIndex++
             _currentWord.value = wordList[currentIndex]
         } else {
+            // Завершаем обучение — вызываем suspend-функцию в корутине
             viewModelScope.launch {
                 onCardsModeCompleted()
             }
@@ -55,6 +57,10 @@ class TranslationStageViewModel @Inject constructor(
 
     fun setCurrentStudySet(studySet: StudySet) {
         _currentStudySet.value = studySet
+    }
+
+    fun getCurrentStudySet(): StudySet? {
+        return _currentStudySet.value
     }
 
     private suspend fun onCardsModeCompleted() {

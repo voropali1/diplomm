@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.myapplication2.model.Word
 import com.example.myapplication2.databinding.FragmentQuizStageBinding
+import com.example.myapplication2.model.StudySet
+import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -22,6 +25,10 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var _binding: FragmentQuizStageBinding? = null
     private val binding get() = _binding!!
+    private var isFullSet: Boolean = false
+
+
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     private val viewModel: QuizViewModel by viewModels()
     private var wordList: List<Word> = emptyList()
@@ -35,9 +42,23 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
         // Инициализация TextToSpeech
         tts = TextToSpeech(requireContext(), this)
 
+        val receivedSet = arguments?.getSerializable("studySet") as? StudySet
+        isFullSet = arguments?.getBoolean("isFullSet", false) ?: false
+
+
+
+
+
         arguments?.let {
             wordList = (it.getSerializable("words") as? ArrayList<Word>) ?: emptyList()
+
         }
+
+        receivedSet?.let {
+            viewModel.setCurrentStudySet(it)
+        }
+
+        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
 
         if (wordList.isNotEmpty()) {
             viewModel.setQuestionsFromWords(wordList)
@@ -88,6 +109,20 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
             binding.answer2.text = options[1]
             binding.answer3.text = options[2]
             binding.answer4.text = options[3]
+        }
+
+        // Наблюдение за завершением режима
+        viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
+            if (completed && isFullSet) {
+                // Проверяем, был ли сет уже завершён
+                val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
+                if (studySet != null && !studySet.isFinished) {
+                    // Обновляем статус завершённости сета
+                    profileViewModel.updateCompletedSets(true)
+                    // Здесь можно обновить флаг completed в вашем объекте StudySet, если это нужно
+                    studySet.isFinished = true
+                }
+            }
         }
 
         // Логика для кнопки озвучки термина

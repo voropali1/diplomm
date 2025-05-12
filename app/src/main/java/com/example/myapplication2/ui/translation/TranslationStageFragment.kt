@@ -1,5 +1,6 @@
 package com.example.myapplication2.ui.translation
 
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication2.R
 import com.example.myapplication2.databinding.FragmentTermDefinitionStageBinding
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.ui.profile.ProfileViewModel
@@ -25,6 +28,7 @@ class TranslationStageFragment : Fragment() {
 
     private lateinit var tts: TextToSpeech
     private var currentLanguageTag: String? = null
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +38,7 @@ class TranslationStageFragment : Fragment() {
 
         // Получаем сет и язык
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
+        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
         receivedSet?.let {
             viewModel.setCurrentStudySet(it)
             currentLanguageTag = it.language_from // <-- язык, с которого идёт перевод
@@ -59,6 +64,21 @@ class TranslationStageFragment : Fragment() {
             binding.termTV.text = word.term
         }
 
+        // Наблюдение за завершением режима
+        viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
+            if (completed && isFullSet) {
+                // Проверяем, был ли сет уже завершён
+                val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
+                if (studySet != null && !studySet.isFinished) {
+                    // Обновляем статус завершённости сета
+                    profileViewModel.updateCompletedSets(true)
+                    // Обновляем флаг завершённости в объекте StudySet
+                    studySet.isFinished = true
+                }
+                findNavController().popBackStack()
+            }
+        }
+
         // Озвучка по кнопке
         binding.volumeUpIB.setOnClickListener {
             val wordToSpeak = binding.termTV.text.toString()
@@ -69,15 +89,41 @@ class TranslationStageFragment : Fragment() {
         // Проверка по кнопке
         binding.checkAnswerBtn.setOnClickListener {
             val answer = binding.answerET.text.toString()
-            viewModel.checkTranslationAnswer(answer)
-            binding.answerET.text.clear()
+            val isCorrect = viewModel.checkAnswer(answer)
+
+            val text = if (isCorrect) "Correct!" else "Incorrect!"
+            val drawableRes = if (isCorrect) R.drawable.anim_happy else R.drawable.anim_drop
+
+            binding.emojiTextTV.text = text
+            binding.emojiIV.setImageResource(drawableRes)
+            val animation = binding.emojiIV.drawable as? Animatable
+
+            binding.emojiContainer.visibility = View.VISIBLE
+            animation?.start()
+
+            // скрыть emoji через 1000 мс
+            binding.emojiContainer.postDelayed({
+                _binding?.emojiContainer?.visibility = View.GONE
+            }, 1000)
+
+            if (isCorrect) {
+                binding.checkAnswerBtn.isEnabled = false
+
+                view?.postDelayed({
+                    _binding?.let { binding ->
+                        viewModel.nextWord()
+                        binding.checkAnswerBtn.isEnabled = true
+                        binding.answerET.text.clear()
+                    }
+                }, 800)
+            }
         }
 
         // Проверка по Enter
         binding.answerET.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val answer = binding.answerET.text.toString()
-                viewModel.checkTranslationAnswer(answer)
+                viewModel.checkAnswer(answer)
                 binding.answerET.text.clear()
                 true
             } else false
@@ -94,6 +140,7 @@ class TranslationStageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.root?.removeCallbacks(null)
         _binding = null
         tts.stop()
         tts.shutdown()

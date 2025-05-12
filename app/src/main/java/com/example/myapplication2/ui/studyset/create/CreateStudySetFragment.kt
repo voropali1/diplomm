@@ -158,7 +158,8 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
         terms.forEachIndexed { index, term ->
           translator.translate(term)
             .addOnSuccessListener { translatedText ->
-              wordsAdapter.addWord(Word(term, translatedText))
+              wordsAdapter.addWord(Word(term, translatedText, isMarked = false))
+
 
               if (index == terms.lastIndex) {
                 onLastWordTranslated(translator)
@@ -177,12 +178,22 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
 
   private fun saveStudySet() {
     val name = binding.titleEdittext.text.toString().trim()
+    // Проверка на пустое имя и отсутствие слов
     if (name.isEmpty() || wordsAdapter.itemCount == 0) {
-      Toast.makeText(requireContext(), "Enter", Toast.LENGTH_SHORT).show()
+      Toast.makeText(requireContext(), "Enter a valid name and add some words", Toast.LENGTH_SHORT).show()
       return
     }
 
-    val wordsString = wordsAdapter.getWords().joinToString("\n") { "${it.term} - ${it.translation}" }
+    // Проверка на пустые поля term и translation для каждого слова
+    for (word in wordsAdapter.getWords()) {
+      if (word.term.isEmpty() || word.translation.isEmpty()) {
+        Toast.makeText(requireContext(), "Please fill in all fields for each word", Toast.LENGTH_SHORT).show()
+        return
+      }
+    }
+
+    val wordsString =
+      wordsAdapter.getWords().joinToString("\n") { "${it.term} - ${it.translation}" }
 
     val studySet = if (isEditMode) {
       existingSet?.apply {
@@ -197,7 +208,7 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
         creator = "User",
         name = name,
         words = wordsString,
-        marked_words = existingSet?.marked_words ?: "",
+        marked_words = "",
         language_to = languageTo,
         language_from = languageFrom,
         amount_of_words = wordsAdapter.itemCount
@@ -212,7 +223,10 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
           viewModel.addStudySet(studySet!!)
         }
 
-        val action = CreateStudySetFragmentDirections.actionCreateStudySetFragmentToStudySetDetailsFragment(studySet!!)
+        val action =
+          CreateStudySetFragmentDirections.actionCreateStudySetFragmentToStudySetDetailsFragment(
+            studySet!!
+          )
         findNavController().navigate(action)
       } catch (e: Exception) {
         Log.e("CreateStudySetFragment", "Error while saving study set", e)
@@ -245,7 +259,8 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
   }
 
   private fun setupLanguageSpinners() {
-    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, BaseVariables.LANGUAGES)
+    val adapter =
+      ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, BaseVariables.LANGUAGES)
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
     binding.languageFormSpinner.adapter = adapter
@@ -263,13 +278,14 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
       languageTo = BaseVariables.LANGUAGES_SHORT[defaultToIndex]
     }
 
-    binding.languageFormSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        languageFrom = BaseVariables.LANGUAGES_SHORT[position]
-      }
+    binding.languageFormSpinner.onItemSelectedListener =
+      object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+          languageFrom = BaseVariables.LANGUAGES_SHORT[position]
+        }
 
-      override fun onNothingSelected(parent: AdapterView<*>?) {}
-    }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+      }
 
     binding.languageToSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

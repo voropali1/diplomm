@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.myapplication2.databinding.FragmentSpeechStageBinding
 import com.example.myapplication2.model.StudySet
+import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,7 @@ class SpeechStageFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SpeechStageViewModel by viewModels()
-
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     private val speechRecognizerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -55,19 +56,30 @@ class SpeechStageFragment : Fragment() {
 
         // Устанавливаем сет, если передан через arguments
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
+        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
         receivedSet?.let {
             viewModel.setCurrentStudySet(it)
         }
-
 
         // Подписка на отображение текущего слова
         viewModel.currentWord.observe(viewLifecycleOwner) { word ->
             binding.translationTV.text = word.translation
         }
 
+        viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
+            val currentStudySet = viewModel.getCurrentStudySet()
+            if (completed && isFullSet && currentStudySet != null) {
+                // Проверяем, было ли завершение сета после последнего слова
+                if (!currentStudySet.isFinished) {
+                    // Устанавливаем флаг завершенности сета
+                    profileViewModel.updateCompletedSets(true)
+                    currentStudySet.isFinished = true
+                }
+            }
+        }
+
         binding.voiceBtn.setOnClickListener {
             val currentLanguage = viewModel.currentStudySet.value?.language_to
-
             Toast.makeText(requireContext(), "Используется язык: $currentLanguage", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -84,6 +96,10 @@ class SpeechStageFragment : Fragment() {
         }
 
         binding.cannotSpeakBTN.setOnClickListener {
+            // Устанавливаем флаг завершенности сета, если это последнее слово
+            if (viewModel.isLastWord()) {
+                viewModel.isLastWordTrue()
+            }
             viewModel.nextWord()
         }
 
@@ -95,3 +111,4 @@ class SpeechStageFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -118,14 +118,14 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Кнопки: Учить всё / Учить с отметкой -->
                     <LinearLayout
                         android:id="@+id/study_categories_LL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:visibility="visible"
-                        android:layout_marginTop="3dp">
+                        android:layout_marginTop="3dp"
+                        android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/study_all_MBTN"
@@ -133,7 +133,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_margin="3dp"
                             android:text="@string/study_all"
                             android:backgroundTint="@color/blue"
                             android:textColor="#fff"
@@ -147,12 +146,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_margin="3dp"
                             android:text="@string/study_marked"
                             android:textSize="12sp"
                             app:cornerRadius="0dp"
                             app:strokeColor="@color/blue" />
+
                     </LinearLayout>
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>

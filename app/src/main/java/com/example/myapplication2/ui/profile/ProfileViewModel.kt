@@ -1,6 +1,7 @@
 package com.example.myapplication2.ui.profile
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -42,6 +43,7 @@ class ProfileViewModel @Inject constructor(
 
     // Обновление количества завершённых сетов
     fun updateCompletedSets(isSetCompletedSuccessfully: Boolean) {
+
         if (isSetCompletedSuccessfully) {
             val updatedProfile = _userProfile.value?.copy(
                 completedSets = (_userProfile.value?.completedSets ?: 0) + 1

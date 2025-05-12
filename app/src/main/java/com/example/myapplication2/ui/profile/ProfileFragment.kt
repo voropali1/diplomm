@@ -41,18 +41,23 @@ class ProfileFragment : Fragment() {
         profileViewModel.userProfile.observe(viewLifecycleOwner) { profile ->
             profileViewModel.totalSets.observe(viewLifecycleOwner) { total ->
                 binding.usernameTextView.text = "Hello, ${profile.username}!"
-                binding.completedSetsTextView.text = "Completed sets: ${profile.completedSets}/$total"
-                updateChart(profile.completedSets, total)
+
+                if (total == 0) {
+                    binding.completedSetsTextView.text = "No statistics yet"
+                    binding.progressPieChart.visibility = View.GONE
+                } else {
+                    binding.completedSetsTextView.text = "Completed sets: ${profile.completedSets}/$total"
+                    binding.progressPieChart.visibility = View.VISIBLE
+                    updateChart(profile.completedSets, total)
+                }
             }
         }
-
 
         binding.signOutButton.setOnClickListener {
             findNavController().navigate(R.id.loginFragment)
         }
-
-
     }
+
 
     private fun updateChart(completed: Int, total: Int) {
         val pieChart = binding.progressPieChart

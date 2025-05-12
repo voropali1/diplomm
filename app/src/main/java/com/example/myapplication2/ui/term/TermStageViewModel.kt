@@ -37,14 +37,16 @@ class TermStageViewModel @Inject constructor(
         }
     }
 
-    fun checkAnswer(answer: String) {
+    fun checkAnswer(answer: String): Boolean {
         val correct = currentWord.value?.term.equals(answer.trim(), ignoreCase = true)
-        if (correct) {
-            nextWord()
-        }
+        //if (correct) {
+        //    nextWord()
+        //}
+        return correct
     }
 
-    private fun nextWord() {
+
+    fun nextWord() {
         if (currentIndex + 1 < wordList.size) {
             currentIndex++
             _currentWord.value = wordList[currentIndex]
@@ -55,6 +57,8 @@ class TermStageViewModel @Inject constructor(
             }
         }
     }
+
+
 
     fun setCurrentStudySet(studySet: StudySet) {
         _currentStudySet.value = studySet

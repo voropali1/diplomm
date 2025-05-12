@@ -35,6 +35,8 @@ class StudySetDetailsFragment : Fragment() {
     private lateinit var wordsAdapter: SpecificStudySetAdapter
     private lateinit var allWords: List<Word>
     private var currentSet: StudySet? = null
+    private var isStudyMarked: Boolean = false
+
     @Inject lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,12 +68,18 @@ class StudySetDetailsFragment : Fragment() {
         }
 
         binding.termBtn.setOnClickListener {
-            // 👇 Здесь мы выбираем первое слово, ты можешь заменить на любое другое
-            val word = allWords.firstOrNull()
+            val wordsToStudy = if (isStudyMarked) {
+                allWords.filter { it.isMarked }
+            } else {
+                allWords
+            }
+
+            val word = wordsToStudy.firstOrNull()
             if (word != null) {
                 val bundle = Bundle().apply {
-                    putSerializable("words", ArrayList(allWords))
+                    putSerializable("words", ArrayList(wordsToStudy))
                     putSerializable("studySet", currentSet)
+                    putBoolean("isFullSet", !isStudyMarked)
                 }
 
                 findNavController().navigate(R.id.definitionTermStageFragment, bundle)
@@ -80,13 +88,19 @@ class StudySetDetailsFragment : Fragment() {
             }
         }
         binding.translationBtn.setOnClickListener {
-            // 👇 Здесь мы выбираем первое слово, ты можешь заменить на любое другое
-            val word = allWords.firstOrNull()
+            // Фильтрация слов, аналогично как для termBtn
+            val wordsToStudy = if (isStudyMarked) {
+                allWords.filter { it.isMarked }
+            } else {
+                allWords
+            }
+
+            val word = wordsToStudy.firstOrNull()
             if (word != null) {
                 val bundle = Bundle().apply {
-                    putSerializable("words", ArrayList(allWords))
+                    putSerializable("words", ArrayList(wordsToStudy))
                     putSerializable("studySet", currentSet)
-
+                    putBoolean("isFullSet", !isStudyMarked)
                 }
 
                 findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
@@ -97,40 +111,90 @@ class StudySetDetailsFragment : Fragment() {
 
 
         binding.cardsBtn.setOnClickListener {
-            val wordsString = allWords.joinToString("\n") { "${it.term} - ${it.translation}" }
+            // Фильтрация слов в зависимости от флага isStudyMarked
+            val wordsToStudy = if (isStudyMarked) {
+                allWords.filter { it.isMarked }
+            } else {
+                allWords
+            }
 
+            // Преобразуем отфильтрованные слова в строку
+            val wordsString = wordsToStudy.joinToString("\n") { "${it.term} - ${it.translation}" }
+
+            // Передаем в Bundle
             val bundle = Bundle().apply {
                 putString("wordsString", wordsString)
                 putSerializable("studySet", currentSet)
+                putBoolean("isFullSet", !isStudyMarked)
             }
+
+            // Навигация в CardModeFragment
             findNavController().navigate(R.id.action_studySetDetailsFragment_to_cardModeFragment, bundle)
-
-
         }
+
 
         binding.quizBtn.setOnClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("words", ArrayList(allWords))
-                // Word должен быть Serializable
+            // Фильтрация слов в зависимости от флага isStudyMarked
+            val wordsToStudy = if (isStudyMarked) {
+                allWords.filter { it.isMarked }
+            } else {
+                allWords
             }
 
-            findNavController().navigate(R.id.quizFragment, bundle)
+            // Проверка, достаточно ли слов для начала викторины
+            if (wordsToStudy.size < 4) {
+                Toast.makeText(requireContext(), "At least 4 words are required to start the quiz", Toast.LENGTH_SHORT).show()
+            } else {
+                // Передаем отфильтрованные слова в Bundle
+                val bundle = Bundle().apply {
+                    putSerializable("words", ArrayList(wordsToStudy))
+                    putSerializable("studySet", currentSet)
+                    putBoolean("isFullSet", !isStudyMarked)
+                }
+
+                // Навигация в QuizFragment
+                findNavController().navigate(R.id.quizFragment, bundle)
+            }
         }
 
+
+
         binding.listenBtn.setOnClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("words", ArrayList(allWords)) // Word должен быть Serializable
+            // Фильтрация слов в зависимости от флага isStudyMarked
+            val wordsToStudy = if (isStudyMarked) {
+                allWords.filter { it.isMarked }
+            } else {
+                allWords
             }
 
+            // Передаем отфильтрованные слова в Bundle
+            val bundle = Bundle().apply {
+                putSerializable("words", ArrayList(wordsToStudy)) // Передаем отфильтрованные слова
+                putSerializable("studySet", currentSet)
+                putBoolean("isFullSet", !isStudyMarked)
+            }
+
+            // Навигация в ListenFragment
             findNavController().navigate(R.id.listenFragment, bundle)
         }
 
+
         binding.speakBtn.setOnClickListener {
-            if (allWords.isNotEmpty()) {
+            // Фильтрация слов в зависимости от флага isStudyMarked
+            val wordsToStudy = if (isStudyMarked) {
+                allWords.filter { it.isMarked }
+            } else {
+                allWords
+            }
+
+            // Проверка, есть ли слова для изучения
+            if (wordsToStudy.isNotEmpty()) {
                 val bundle = Bundle().apply {
-                    putSerializable("words", ArrayList(allWords)) // Word должен быть Serializable
-                    putSerializable("studySet", currentSet) // <-- добавляем StudySet
+                    putSerializable("words", ArrayList(wordsToStudy)) // Передаем отфильтрованные слова
+                    putSerializable("studySet", currentSet) // Передаем StudySet
+                    putBoolean("isFullSet", !isStudyMarked)
                 }
+                // Навигация в SpeechFragment
                 findNavController().navigate(R.id.speechFragment, bundle)
             } else {
                 Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
@@ -143,7 +207,9 @@ class StudySetDetailsFragment : Fragment() {
 
 
 
+
         binding.studyAllMBTN.setOnClickListener {
+            isStudyMarked = false
             binding.studyAllMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
             binding.studyMarkedMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.studyAllMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -152,13 +218,24 @@ class StudySetDetailsFragment : Fragment() {
         }
 
         binding.studyMarkedMBTN.setOnClickListener {
+            isStudyMarked = true
             binding.studyMarkedMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
             binding.studyAllMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.studyMarkedMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.studyAllMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
-            val markedWords = wordsAdapter.getAllWords().filter { it.isMarked }
-            wordsAdapter.updateData(markedWords)
+
+            // Фильтруем только те слова, которые помечены
+            val markedWords = allWords.filter { it.isMarked }
+
+            // Проверяем, есть ли хотя бы одно отмеченное слово
+            if (markedWords.isEmpty()) {
+                Toast.makeText(requireContext(), "No marked words", Toast.LENGTH_SHORT).show()
+            } else {
+                // Обновляем данные адаптера только с помеченными словами
+                wordsAdapter.updateData(markedWords)
+            }
         }
+
 
         return binding.root
     }

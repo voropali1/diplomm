@@ -16,7 +16,7 @@ class StudySet : Serializable {
     var creator: String? = null
     var name: String? = null
     var words: String
-    var marked_words: String? = null
+    var marked_words: String = ""
     var language_to: String? = null
     var language_from: String? = null
     var isSync_status: Boolean = false
@@ -44,7 +44,7 @@ class StudySet : Serializable {
         this.creator = creator
         this.name = name
         this.words = words
-        this.marked_words = marked_words // 👈 Добавляем и инициализируем
+        this.marked_words = marked_words ?: ""// 👈 Добавляем и инициализируем
         this.language_to = language_to
         this.language_from = language_from
         this.amount_of_words = amount_of_words

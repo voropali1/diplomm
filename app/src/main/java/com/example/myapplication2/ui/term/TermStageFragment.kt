@@ -1,6 +1,8 @@
 package com.example.myapplication2.ui.term
 
 import android.content.Intent
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -11,9 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication2.R
 import com.example.myapplication2.databinding.FragmentTermDefinitionStageBinding
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.ui.profile.ProfileViewModel
@@ -38,6 +43,7 @@ class TermStageFragment : Fragment() {
         _binding = FragmentTermDefinitionStageBinding.inflate(inflater, container, false)
 
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
+        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
         receivedSet?.let {
             viewModel.setCurrentStudySet(it)
             currentLanguageTag = it.language_to
@@ -65,7 +71,7 @@ class TermStageFragment : Fragment() {
 
         // Наблюдение за завершением режима
         viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
-            if (completed) {
+            if (completed && isFullSet) {
                 // Проверяем, был ли сет уже завершён
                 val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
                 if (studySet != null && !studySet.isFinished) {
@@ -74,6 +80,8 @@ class TermStageFragment : Fragment() {
                     // Здесь можно обновить флаг completed в вашем объекте StudySet, если это нужно
                     studySet.isFinished = true
                 }
+                // Навигация к деталям сета после завершения
+                findNavController().popBackStack()
             }
         }
 
@@ -85,9 +93,39 @@ class TermStageFragment : Fragment() {
 
         binding.checkAnswerBtn.setOnClickListener {
             val answer = binding.answerET.text.toString()
-            viewModel.checkAnswer(answer)
-            binding.answerET.text.clear()
+            val isCorrect = viewModel.checkAnswer(answer)
+
+            val text = if (isCorrect) "Correct!" else "Incorrect!"
+            val drawableRes = if (isCorrect) R.drawable.anim_happy else R.drawable.anim_drop
+
+            binding.emojiTextTV.text = text
+            binding.emojiIV.setImageResource(drawableRes)
+            val animation = binding.emojiIV.drawable as? Animatable
+
+            binding.emojiContainer.visibility = View.VISIBLE
+            animation?.start()
+
+            // скрыть emoji через 1000 мс
+            binding.emojiContainer.postDelayed({
+                _binding?.emojiContainer?.visibility = View.GONE
+            }, 1000)
+
+            if (isCorrect) {
+                binding.checkAnswerBtn.isEnabled = false
+
+                view?.postDelayed({
+                    _binding?.let { binding ->
+                        viewModel.nextWord()
+                        binding.checkAnswerBtn.isEnabled = true
+                        binding.answerET.text.clear()
+                    }
+                }, 800)
+            }
         }
+
+
+
+
 
         return binding.root
     }
@@ -100,6 +138,7 @@ class TermStageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.root?.removeCallbacks(null)
         _binding = null
         tts.stop()
         tts.shutdown()
