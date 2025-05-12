@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/study_sets_navigation"
+    app:startDestination="@id/studySetDetailsFragment">
+
+    <fragment
+        android:id="@+id/studySetDetailsFragment"
+        android:name="com.example.myapplication2.ui.detail.StudySetDetailsFragment"
+        android:label="Study Set Detail"
+        tools:layout="@layout/activity_specific_studyset">
+        <argument
+            android:name="studySet"
+            app:argType="com.example.myapplication2.model.StudySet"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_cardModeFragment"
+            app:destination="@id/cardModeFragment" />
+
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_definitionTermStageFragment"
+            app:destination="@id/definitionTermStageFragment" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_definitionTranslationStageFragment"
+            app:destination="@id/definitionTranslationStageFragment" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_listenStageFragment"
+            app:destination="@id/listenFragment" />
+        <action
+            android:id="@+id/action_studySetDetailsFragment_to_speechFragment"
+            app:destination="@id/speechFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cardModeFragment"
+        android:name="com.example.myapplication2.ui.cards.CardModeFragment"
+        android:label="Cards"
+        tools:layout="@layout/activity_card_mode">
+        <argument
+            android:name="wordsString"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.example.myapplication2.ui.quiz.QuizFragment"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_quiz_stage">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/definitionTermStageFragment"
+        android:name="com.example.myapplication2.ui.term.TermStageFragment"
+        android:label="Term"
+        tools:layout="@layout/fragment_term_definition_stage">
+        <argument
+            android:name="word"
+            app:argType="com.example.myapplication2.model.Word"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/definitionTranslationStageFragment"
+        android:name="com.example.myapplication2.ui.translation.TranslationStageFragment"
+        android:label="Translation"
+        tools:layout="@layout/fragment_term_definition_stage">
+        <argument
+            android:name="word"
+            app:argType="com.example.myapplication2.model.Word"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/listenFragment"
+        android:name="com.example.myapplication2.ui.listen.ListenFragment"
+        android:label="Listen"
+        tools:layout="@layout/fragment_audio_stage">
+        <argument
+            android:name="word"
+            app:argType="com.example.myapplication2.model.Word"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/speechFragment"
+        android:name="com.example.myapplication2.ui.speech.SpeechStageFragment"
+        android:label="Speech"
+        tools:layout="@layout/fragment_speech_stage">
+        <argument
+            android:name="words"
+            app:argType="com.example.myapplication2.model.Word"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/create_study_set"
+        android:name="com.example.myapplication2.ui.studyset.create.CreateStudySetFragment"
+        tools:layout="@layout/fragment_create_study_set" />
+
+</navigation>

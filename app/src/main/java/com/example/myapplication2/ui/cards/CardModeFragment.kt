@@ -60,7 +60,7 @@ class CardModeFragment : Fragment() {
                 Log.d("CardModeFragment", "isFullSet: $isFullSet, isFinished before: ${studySet?.isFinished}")
                 if (studySet != null && !studySet.isFinished) {
                     // Обновляем статус завершённости сета
-                    profileViewModel.updateCompletedSets(true) // Обновляем статус завершённости сета
+                    profileViewModel.updateCompletedSets(studySet) // Обновляем статус завершённости сета
                     studySet.isFinished = true // Обновляем флаг завершённости сета
                     // Здесь можно обновить флаг completed в вашем объекте StudySet, если это нужно
                     // Например, можно обновить базу данных или репозиторий

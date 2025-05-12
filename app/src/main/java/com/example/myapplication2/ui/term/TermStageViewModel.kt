@@ -19,7 +19,8 @@ class TermStageViewModel @Inject constructor(
     private val repository: StudySetRepository,
 ) : ViewModel() {
 
-    private val wordList: List<Word> = (savedStateHandle.get<ArrayList<Word>>("words") ?: arrayListOf())
+    private val wordList: List<Word> =
+        (savedStateHandle.get<ArrayList<Word>>("words") ?: arrayListOf())
     private var currentIndex = 0
 
     private val _currentStudySet = MutableLiveData<StudySet>()
@@ -57,8 +58,6 @@ class TermStageViewModel @Inject constructor(
             }
         }
     }
-
-
 
     fun setCurrentStudySet(studySet: StudySet) {
         _currentStudySet.value = studySet

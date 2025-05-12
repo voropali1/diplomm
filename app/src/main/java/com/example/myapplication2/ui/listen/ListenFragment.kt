@@ -117,7 +117,7 @@ class ListenFragment : Fragment() {
                 Log.d("ListenFragment", "studySet: ${studySet?.id}, isFinished: ${studySet?.isFinished}")
                 if (studySet != null && !studySet.isFinished) {
                     // Обновляем статус завершённости сета
-                    profileViewModel.updateCompletedSets(true)
+                    profileViewModel.updateCompletedSets(studySet)
                     // Обновляем флаг завершенности сета
                     studySet.isFinished = true
                     Log.d("ListenFragment", "studySet is now finished: ${studySet.isFinished}")

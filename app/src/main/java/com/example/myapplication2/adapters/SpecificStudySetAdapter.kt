@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class SpecificStudySetAdapter @Inject constructor(
     private var mWords: List<Word>,
-    val sharedPreferences: SharedPreferences
+    val sharedPreferences: SharedPreferences,
 ) : RecyclerView.Adapter<SpecificStudySetAdapter.SpecificStudySetHolder>() {
 
     class SpecificStudySetHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,14 +25,18 @@ class SpecificStudySetAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpecificStudySetHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.studyset_word_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.studyset_word_item, parent, false)
         return SpecificStudySetHolder(view)
     }
 
     override fun onBindViewHolder(holder: SpecificStudySetHolder, position: Int) {
         val word = mWords[position]
 
-        Log.d("SpecificStudySetAdapter", "Binding word: ${word.term} - ${word.translation}, isMarked: ${word.isMarked}")
+        Log.d(
+            "SpecificStudySetAdapter",
+            "Binding word: ${word.term} - ${word.translation}, isMarked: ${word.isMarked}"
+        )
 
         holder.term.text = word.term
         holder.translation.text = word.translation
@@ -41,19 +45,28 @@ class SpecificStudySetAdapter @Inject constructor(
         holder.starBtn.isChecked = word.isMarked
 
         // Логируем текущее состояние звездочки
-        Log.d("SpecificStudySetAdapter", "Initial star button state for ${word.term}: ${holder.starBtn.isChecked}")
+        Log.d(
+            "SpecificStudySetAdapter",
+            "Initial star button state for ${word.term}: ${holder.starBtn.isChecked}"
+        )
 
         holder.starBtn.setOnCheckedChangeListener { _, isChecked ->
             word.isMarked = isChecked
             // Логируем изменение состояния
-            Log.d("SpecificStudySetAdapter", "Star button clicked for ${word.term}, new state: $isChecked")
+            Log.d(
+                "SpecificStudySetAdapter",
+                "Star button clicked for ${word.term}, new state: $isChecked"
+            )
 
             // Сохраняем состояние звездочки в SharedPreferences с использованием уникального id
             val key = "word_marked_${word.term}_${word.translation}".hashCode().toString()
             sharedPreferences.edit().putBoolean(key, isChecked).apply()
 
             // Логируем результат сохранения
-            Log.d("SpecificStudySetAdapter", "Saved star state for ${word.term} to SharedPreferences: $isChecked")
+            Log.d(
+                "SpecificStudySetAdapter",
+                "Saved star state for ${word.term} to SharedPreferences: $isChecked"
+            )
         }
 
     }

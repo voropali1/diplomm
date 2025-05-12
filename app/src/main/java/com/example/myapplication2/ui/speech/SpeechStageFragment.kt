@@ -72,7 +72,7 @@ class SpeechStageFragment : Fragment() {
                 // Проверяем, было ли завершение сета после последнего слова
                 if (!currentStudySet.isFinished) {
                     // Устанавливаем флаг завершенности сета
-                    profileViewModel.updateCompletedSets(true)
+                    profileViewModel.updateCompletedSets(currentStudySet)
                     currentStudySet.isFinished = true
                 }
             }
@@ -80,10 +80,17 @@ class SpeechStageFragment : Fragment() {
 
         binding.voiceBtn.setOnClickListener {
             val currentLanguage = viewModel.currentStudySet.value?.language_to
-            Toast.makeText(requireContext(), "Используется язык: $currentLanguage", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Используется язык: $currentLanguage",
+                Toast.LENGTH_SHORT
+            ).show()
 
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, currentLanguage)
                 putExtra(RecognizerIntent.EXTRA_PROMPT, "Скажите слово...")
             }
@@ -91,7 +98,11 @@ class SpeechStageFragment : Fragment() {
             try {
                 speechRecognizerLauncher.launch(intent)
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Распознавание речи недоступно", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Распознавание речи недоступно",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

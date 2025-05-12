@@ -17,6 +17,9 @@ interface DaoStudySet {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStudySet(studySet: StudySet): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertManyStudySets(studySets: List<StudySet>)
+
     @Update
     suspend fun updateStudySet(studySet: StudySet)
 
@@ -32,9 +35,6 @@ interface DaoStudySet {
     @Query("SELECT * FROM study_set_table WHERE id=:id")
     suspend fun getNoLiveDataSpecificStudySet(id: Int): StudySet? // ✅ Добавили `suspend`
 
-    @Query("SELECT * FROM study_set_table WHERE sync_status=0")
-    suspend fun getUnsyncedStudySet(): List<StudySet> // ✅ Добавили `suspend`
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(studySets: List<StudySet>)
 
@@ -43,7 +43,5 @@ interface DaoStudySet {
 
     @Query("DELETE FROM study_set_table")
     suspend fun deleteAll()
-
-
 }
 

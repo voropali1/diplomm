@@ -1,0 +1,109 @@
+<component name="InspectionProjectProfileManager">
+    <profile is_locked="false" version="1.0">
+        <option name="myName" value="Project Default" />
+        <inspection_tool class="AndroidLintNewerVersionAvailable" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="ArrayCreationWithoutNewKeyword" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="ArrayEquality" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="ArrayLengthInLoopCondition" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="AssignmentUsedAsCondition" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="CallToSimpleGetterInClass" enabled="true" enabled_by_default="true"
+            level="WARNING">
+            <option name="ignoreGetterCallsOnOtherObjects" value="false" />
+            <option name="onlyReportPrivateGetter" value="false" />
+        </inspection_tool>
+        <inspection_tool class="CallToSimpleSetterInClass" enabled="true" enabled_by_default="true"
+            level="WARNING">
+            <option name="ignoreSetterCallsOnOtherObjects" value="false" />
+            <option name="onlyReportPrivateSetter" value="false" />
+        </inspection_tool>
+        <inspection_tool class="CallToStringConcatCanBeReplacedByOperator" enabled="true"
+            enabled_by_default="true" level="ERROR" />
+        <inspection_tool class="CastConflictsWithInstanceof" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="ClassMayBeInterface" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="ComparableImplementedButEqualsNotOverridden" enabled="true"
+            enabled_by_default="true" level="WARNING" />
+        <inspection_tool class="DoubleBraceInitialization" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="DynamicRegexReplaceableByCompiledPattern" enabled="true"
+            enabled_by_default="true" level="WARNING" />
+        <inspection_tool class="EqualsCalledOnEnumConstant" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="FallthruInSwitchStatement" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="FieldMayBeStatic" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="ForCanBeForeach" enabled="false" enabled_by_default="false"
+            level="WARNING">
+            <option name="REPORT_INDEXED_LOOP" value="false" />
+            <option name="ignoreUntypedCollections" value="false" />
+        </inspection_tool>
+        <inspection_tool class="LengthOneStringsInConcatenation" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="LiteralAsArgToStringEquals" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="MagicNumber" enabled="true" enabled_by_default="true" level="ERROR">
+            <option name="ignoreInitialCapacity" value="true" />
+        </inspection_tool>
+        <inspection_tool class="MapReplaceableByEnumMap" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="MethodMayBeStatic" enabled="true" enabled_by_default="true"
+            level="WARNING">
+            <option name="m_onlyPrivateOrFinal" value="false" />
+            <option name="m_ignoreEmptyMethods" value="true" />
+        </inspection_tool>
+        <inspection_tool class="MissingOverrideAnnotation" enabled="true" enabled_by_default="true"
+            level="ERROR">
+            <option name="ignoreObjectMethods" value="true" />
+            <option name="ignoreAnonymousClassMethods" value="false" />
+        </inspection_tool>
+        <inspection_tool class="NonFinalUtilityClass" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="ObjectAllocationInLoop" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="PointlessNullCheck" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="RedundantImplements" enabled="true" enabled_by_default="true"
+            level="WARNING">
+            <option name="ignoreSerializable" value="false" />
+            <option name="ignoreCloneable" value="false" />
+        </inspection_tool>
+        <inspection_tool class="SetReplaceableByEnumSet" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="SizeReplaceableByIsEmpty" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="SpellCheckingInspection" enabled="true" enabled_by_default="true"
+            level="ERROR">
+            <scope name="Project Files" enabled="true" level="ERROR">
+                <option name="processCode" value="true" />
+                <option name="processLiterals" value="true" />
+                <option name="processComments" value="true" />
+            </scope>
+            <option name="processCode" value="true" />
+            <option name="processLiterals" value="true" />
+            <option name="processComments" value="true" />
+        </inspection_tool>
+        <inspection_tool class="StringReplaceableByStringBuffer" enabled="true" enabled_by_default="true"
+            level="WARNING">
+            <option name="onlyWarnOnLoop" value="true" />
+        </inspection_tool>
+        <inspection_tool class="SuspiciousGetterSetter" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="UnnecessaryConstructor" enabled="true" enabled_by_default="true"
+            level="WARNING" />
+        <inspection_tool class="UnnecessarySemicolon" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+        <inspection_tool class="WhileCanBeForeach" enabled="false" enabled_by_default="false"
+            level="WARNING" />
+        <inspection_tool class="ZeroLengthArrayInitialization" enabled="true" enabled_by_default="true"
+            level="ERROR" />
+    </profile>
+</component>

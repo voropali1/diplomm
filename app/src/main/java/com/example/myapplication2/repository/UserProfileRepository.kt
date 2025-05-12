@@ -2,9 +2,13 @@ package com.example.myapplication2.repository
 
 import android.content.SharedPreferences
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserProfileRepository @Inject constructor(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val userProfilePreferencesManager: UserProfilePreferencesManager,
+    private val studySetRepository: StudySetRepository,
 ) {
 
     companion object {
@@ -29,6 +33,19 @@ class UserProfileRepository @Inject constructor(
             putInt(PROGRESS_KEY, progress)
             apply()
         }
+    }
+
+    fun isLoggedIn(): Boolean {
+        return userProfilePreferencesManager.isLoggedIn()
+    }
+
+    fun setLoginEmail(email: String) {
+        userProfilePreferencesManager.setLoginEmail(email)
+    }
+
+    suspend fun logout() {
+        userProfilePreferencesManager.clearLoginEmail()
+        studySetRepository.deleteAll()
     }
 }
 

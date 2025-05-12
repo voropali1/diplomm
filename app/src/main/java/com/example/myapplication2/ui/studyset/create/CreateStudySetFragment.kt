@@ -3,6 +3,8 @@ package com.example.myapplication2.ui.studyset.create
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
@@ -13,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.canhub.cropper.*
 import com.example.myapplication2.R
 import com.example.myapplication2.constants.BaseVariables
@@ -22,13 +23,13 @@ import com.example.myapplication2.databinding.FragmentCreateStudySetBinding
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.utils.getTabletLayoutManager
 import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.nl.translate.Translation
-import com.google.mlkit.nl.translate.Translator
-import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.example.myapplication2.adapters.WordsAdapter
+import com.example.myapplication2.ui.detail.StudySetDetailsActivity
+import com.google.mlkit.common.model.RemoteModelManager
+import com.google.mlkit.nl.translate.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -126,11 +127,7 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
 
     binding.commitWordsBtn.setOnClickListener {
       if (binding.resultEt.text.toString().isNotEmpty()) {
-        requireActivity().window.setFlags(
-          WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-          WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-        )
-        binding.progressBar!!.root.visibility = View.VISIBLE
+        showLoader()
         manyTranslate(binding.resultEt.text.toString())
       } else {
         Toast.makeText(context, "Result is empty", Toast.LENGTH_SHORT).show()
@@ -138,8 +135,12 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
     }
   }
 
+  private fun showLoader() {
+    _binding?.flLoading?.visibility = View.VISIBLE
+  }
+
   private fun manyTranslate(words: String) {
-    val stringsToBeTranslated = words.replace("\\r?\\n".toRegex(), ";")
+    val stringsToBeTranslated = words.trim().replace("\\r?\\n".toRegex(), ";")
       .replace("\\[".toRegex(), "").replace("]".toRegex(), "")
     val terms = stringsToBeTranslated.split(";").toTypedArray()
 
@@ -150,30 +151,29 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
       .build()
     val translator = Translation.getClient(options)
 
-    val conditions = DownloadConditions.Builder()
-      .requireWifi()
-      .build()
-    translator.downloadModelIfNeeded(conditions)
-      .addOnSuccessListener {
-        terms.forEachIndexed { index, term ->
-          translator.translate(term)
-            .addOnSuccessListener { translatedText ->
-              wordsAdapter.addWord(Word(term, translatedText, isMarked = false))
+    terms.forEachIndexed { index, term ->
+      translator.translate(term)
+        .addOnSuccessListener { translatedText ->
+          wordsAdapter.addWord(Word(term, translatedText, isMarked = false))
 
-
-              if (index == terms.lastIndex) {
-                onLastWordTranslated(translator)
-              }
-            }
+          if (index == terms.lastIndex) {
+            onLastWordTranslated(translator)
+          }
         }
-      }
+        .addOnFailureListener { exception ->
+          Toast.makeText(requireContext(), "Translation failed", Toast.LENGTH_SHORT).show()
+        }
+    }
   }
 
   private fun onLastWordTranslated(englishGermanTranslator: Translator) {
     englishGermanTranslator.close()
     binding.wordsRecyclerview.scrollToPosition(wordsAdapter.itemCount - 1)
-    binding.progressBar!!.root.visibility = View.GONE
-    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    hideLoader()
+  }
+
+  private fun hideLoader() {
+    _binding?.flLoading?.visibility = View.GONE
   }
 
   private fun saveStudySet() {
@@ -195,7 +195,7 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
     val wordsString =
       wordsAdapter.getWords().joinToString("\n") { "${it.term} - ${it.translation}" }
 
-    val studySet = if (isEditMode) {
+    var studySet = if (isEditMode) {
       existingSet?.apply {
         this.name = name
         this.words = wordsString
@@ -220,14 +220,11 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
         if (isEditMode) {
           viewModel.updateStudySet(studySet!!)
         } else {
-          viewModel.addStudySet(studySet!!)
+          studySet = viewModel.addStudySet(studySet!!)
         }
 
-        val action =
-          CreateStudySetFragmentDirections.actionCreateStudySetFragmentToStudySetDetailsFragment(
-            studySet!!
-          )
-        findNavController().navigate(action)
+        val intent = StudySetDetailsActivity.newIntent(requireContext(), studySet)
+        startActivity(intent)
       } catch (e: Exception) {
         Log.e("CreateStudySetFragment", "Error while saving study set", e)
       }
@@ -282,7 +279,9 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
       object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
           languageFrom = BaseVariables.LANGUAGES_SHORT[position]
-        }
+        wordsAdapter.fromLanguage = languageFrom
+        downloadLanguageModel(languageFrom)
+      }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {}
       }
@@ -290,6 +289,8 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
     binding.languageToSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         languageTo = BaseVariables.LANGUAGES_SHORT[position]
+        wordsAdapter.toLanguage = languageTo
+        downloadLanguageModel(languageTo)
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -341,6 +342,64 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
     )
   }
 
+  private val handler = Handler(Looper.getMainLooper())
+
+  private fun downloadLanguageModel(languageTag: String) {
+    showLoader()
+
+    val modelManager = RemoteModelManager.getInstance()
+    val model = TranslateRemoteModel.Builder(TranslateLanguage.fromLanguageTag(languageTag)!!).build()
+    val conditions = DownloadConditions.Builder()
+      .build()
+
+    var isDownloadFinished = false
+
+    // Get translation models stored on the device.
+    modelManager.getDownloadedModels(TranslateRemoteModel::class.java)
+      .addOnSuccessListener { models ->
+        Log.d("CreateStudySetFragment", "Models: ${models.map { it.language }}")
+        if (models.any { it.language == languageTag }) {
+          isDownloadFinished = true
+          hideLoader()
+        } else {
+          modelManager.download(model, conditions)
+            .addOnSuccessListener {
+              isDownloadFinished = true
+              hideLoader()
+            }
+            .addOnFailureListener {
+              isDownloadFinished = true
+              showFailedDownloadMessage(languageTag)
+              hideLoader()
+            }
+        }
+      }
+      .addOnFailureListener {
+        hideLoader()
+      }
+
+    handler
+      .postDelayed(
+        {
+          if (!isDownloadFinished) {
+            showFailedDownloadMessage(languageTag)
+            hideLoader()
+          }
+        },
+        MIN_TIMEOUT,
+      )
+  }
+
+  private fun showFailedDownloadMessage(languageTag: String) {
+    Toast.makeText(requireContext(), "Failed to download translation model for: $languageTag", Toast.LENGTH_LONG)
+      .show()
+  }
+
+  override fun onStop() {
+    super.onStop()
+    handler.removeCallbacksAndMessages(null)
+  }
+
   //handle permission result
   override fun onRequestPermissionsResult(
     requestCode: Int, permissions: Array<String>,
@@ -361,5 +420,6 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
 
   companion object {
     private const val CAMERA_REQUEST_CODE = 200
+    private const val MIN_TIMEOUT = 10000L
   }
 }

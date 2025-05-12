@@ -118,7 +118,7 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
                 val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
                 if (studySet != null && !studySet.isFinished) {
                     // Обновляем статус завершённости сета
-                    profileViewModel.updateCompletedSets(true)
+                    profileViewModel.updateCompletedSets(studySet)
                     // Здесь можно обновить флаг completed в вашем объекте StudySet, если это нужно
                     studySet.isFinished = true
                 }

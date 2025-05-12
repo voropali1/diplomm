@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication2.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.fragment_study_sets, R.id.create_study_set, R.id.profileFragment
+                R.id.list_study_sets, R.id.create_study_set, R.id.profileFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -41,9 +41,9 @@ class MainActivity : AppCompatActivity() {
             val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
 
-            if (item.itemId == R.id.fragment_study_sets) {
+            if (item.itemId == R.id.list_study_sets) {
                 Log.d("NAVIGATION", "Переход в Study Sets")
-                navController.navigate(R.id.fragment_study_sets)
+                navController.navigate(R.id.list_study_sets)
                 true
             } else {
                 NavigationUI.onNavDestinationSelected(item, navController)
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()

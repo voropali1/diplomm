@@ -24,6 +24,7 @@ import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
+
 @AndroidEntryPoint
 class TermStageFragment : Fragment() {
 
@@ -56,11 +57,16 @@ class TermStageFragment : Fragment() {
                     val locale = Locale.forLanguageTag(langTag)
                     val result = tts.setLanguage(locale)
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Toast.makeText(requireContext(), "Язык $langTag не поддерживается", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Язык $langTag не поддерживается",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Ошибка инициализации TTS", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Ошибка инициализации TTS", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -76,7 +82,7 @@ class TermStageFragment : Fragment() {
                 val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
                 if (studySet != null && !studySet.isFinished) {
                     // Обновляем статус завершённости сета
-                    profileViewModel.updateCompletedSets(true)
+                    profileViewModel.updateCompletedSets(studySet)
                     // Здесь можно обновить флаг completed в вашем объекте StudySet, если это нужно
                     studySet.isFinished = true
                 }
@@ -88,7 +94,11 @@ class TermStageFragment : Fragment() {
         binding.volumeUpIB.setOnClickListener {
             val wordToSpeak = binding.termTV.text.toString()
             speakWord(wordToSpeak)
-            Toast.makeText(requireContext(), "Используется язык: $currentLanguageTag", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Используется язык: $currentLanguageTag",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         binding.checkAnswerBtn.setOnClickListener {

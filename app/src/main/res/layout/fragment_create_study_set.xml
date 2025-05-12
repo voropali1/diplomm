@@ -134,10 +134,18 @@
         app:srcCompat="@drawable/ic_plus_white_24dp"
         app:tint="#fff" />
 
-    <include
-        android:id="@+id/progressBar"
-        layout="@layout/custom_progress_bar"
-        android:visibility="gone" />
+    <FrameLayout
+        android:id="@+id/flLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/progressBar"
+            layout="@layout/custom_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </RelativeLayout>
 

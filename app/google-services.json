@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "40516937910",
+    "project_id": "langamy-alina",
+    "storage_bucket": "langamy-alina.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40516937910:android:de3bc6d6be5ff36bca1e17",
+        "android_client_info": {
+          "package_name": "com.example.myapplication2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEkjBwWpDVi-L_QGLT5Klj1wAjqcQzCtY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

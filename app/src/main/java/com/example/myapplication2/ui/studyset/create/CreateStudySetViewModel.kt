@@ -22,15 +22,16 @@ class CreateStudySetViewModel @Inject constructor(private val repository: StudyS
     val studySetsLiveData: LiveData<List<StudySet>> = repository.allStudySets
 
     // Метод для добавления нового набора
-    fun addStudySet(studySet: StudySet) = viewModelScope.launch {
+    suspend fun addStudySet(studySet: StudySet): StudySet {
         Log.d("CreateStudySetViewModel", "Добавляем сет: $studySet")
         val newId = repository.insert(studySet) // Получаем ID после вставки
         studySet.id = newId.toInt() // Обновляем ID в объекте studySet
         loadStudySet(studySet.id) // Загружаем новый сет с актуальным ID
+        return studySet
     }
 
     // Метод для обновления существующего набора
-    fun updateStudySet(studySet: StudySet) = viewModelScope.launch {
+    suspend fun updateStudySet(studySet: StudySet) {
         Log.d("CreateStudySetViewModel", "Обновляем сет: $studySet")
         repository.update(studySet)
     }

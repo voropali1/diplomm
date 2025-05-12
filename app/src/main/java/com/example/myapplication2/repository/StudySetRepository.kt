@@ -2,43 +2,47 @@ package com.example.myapplication2.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.myapplication2.database.DaoStudySet
-import com.example.myapplication2.database.StudySetDatabase
 import com.example.myapplication2.model.StudySet
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class StudySetRepository @Inject constructor(
     private val dao: DaoStudySet,
-    private val studySetDao: DaoStudySet // если это другой DAO, не путай с базой данных!
+    private val firebaseRepository: FirebaseRepository,
 ) {
+    val allStudySets: LiveData<List<StudySet>> = dao.getAllStudySets()
 
-    // Получаем список всех сетов как LiveData
-    val allStudySets: LiveData<List<StudySet>> = dao.getAllStudySets()  // Здесь нет необходимости преобразовывать в List вручную
-
-    // Метод для добавления нового сета
-    suspend fun insert(studySet: StudySet): Long {
-        return dao.insertStudySet(studySet) // предполагается, что insert возвращает Long (ID)
+    suspend fun insertManyLocalOnly(studySets: List<StudySet>) {
+        dao.insertManyStudySets(studySets)
     }
 
+    suspend fun insert(studySet: StudySet): Long {
+        val newStudySetId = dao.insertStudySet(studySet)
+        val newStudySet = studySet.apply { id = newStudySetId.toInt() }
 
-    // Метод для обновления существующего сета
+        firebaseRepository.addStudySet(studySet = newStudySet, onSuccess = {}, onError = {})
+        return newStudySetId
+    }
+
     suspend fun update(studySet: StudySet) {
         dao.updateStudySet(studySet)
+        firebaseRepository.updateStudySet(studySet)
         Log.d("StudySetRepository", "Updated: ${studySet.name}")
     }
 
-    // Метод для удаления сета
     suspend fun delete(studySet: StudySet) {
         dao.deleteStudySet(studySet)
+        firebaseRepository.deleteStudySet(studySet)
     }
 
-    // Метод для удаления сета по его ID
-    suspend fun deleteById(id: Int) {
-        dao.deleteById(id)
+    suspend fun deleteAll() {
+        dao.deleteAll()
     }
 
-    // Получение сета по ID без использования LiveData
     suspend fun getStudySetById(id: Long): StudySet? {
         return dao.getNoLiveDataSpecificStudySet(id.toInt())
     }
@@ -47,13 +51,11 @@ class StudySetRepository @Inject constructor(
         val studySet = dao.getNoLiveDataSpecificStudySet(setId)
         studySet?.let {
             // Update the finished status to true (or some other status change)
-            it.isFinished= true
+            it.isFinished = true
             dao.updateStudySet(it)  // Assuming this method exists to update the study set in your DB
+            firebaseRepository.updateSetFinished(setId)
         }
     }
-
-
-
 }
 
 

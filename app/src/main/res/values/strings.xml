@@ -13,6 +13,7 @@
     <string name="title_profile">Profile</string>
     <string name="create_study_set">Create set</string>
     <string name="study_sets">Study sets</string>
+    <string name="study_set_details">Study set details</string>
     <string name="profile">Profile</string>
     <string name="amount">Amount of terms</string>
     <string name="can_not_translate">Can\'t translate this word</string>
@@ -25,6 +26,7 @@
     <string name="account_title_text">Account</string>
     <string name="google_title_text">Google sign in</string>
     <string name="sign_out">Sign Out</string>
+    <string name="synchronize">Synchronize</string>
 
     <string name="error_sign_in_failed">Sign in failed, see logs for details.</string>
     <string name="title">Title</string>
@@ -117,5 +119,7 @@
     <string name="learn_more_words">Learn more words!</string>
     <string name="you_are_improving_yourself">You are improving yourself!</string>
     <string name="retake_dictation">Retake\n dictation</string>
+    <string name="login">Login</string>
+    <string name="continue_with_google">Continue with Google</string>
 
 </resources>
