@@ -7,34 +7,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.credentials.*
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.PasswordCredential
+import androidx.credentials.PublicKeyCredential
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication2.MainActivity
 import com.example.myapplication2.databinding.FragmentLoginPageBinding
-import com.example.myapplication2.repository.UserProfileRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-
-    @Inject
-    lateinit var userProfileRepository: UserProfileRepository
-
-    private val viewModel: LoginViewModel by viewModels()
-
-    private val clientId =
-        "241593447822-mceq1e9bbvq32d1lq6g7a91ns2ea2knl.apps.googleusercontent.com"
-
     private var _binding: FragmentLoginPageBinding? = null
     private val binding get() = _binding!!
+
+    private val clientId = "241593447822-mceq1e9bbvq32d1lq6g7a91ns2ea2knl.apps.googleusercontent.com"
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,7 +123,6 @@ class LoginFragment : Fragment() {
                         val googleIdTokenCredential =
                             GoogleIdTokenCredential.createFrom(credential.data)
                         val email = googleIdTokenCredential.id
-                        userProfileRepository.setLoginEmail(email)
                         openMainActivity(email)
                         Log.d(TAG, "Google ID Token: $email")
                     } catch (e: GoogleIdTokenParsingException) {

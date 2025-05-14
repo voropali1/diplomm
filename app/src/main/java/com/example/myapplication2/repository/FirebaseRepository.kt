@@ -22,8 +22,7 @@ class FirebaseRepository @Inject constructor(
         db.collection(USERS_COLLECTION)
             .get()
             .addOnSuccessListener { result ->
-                val userDocument =
-                    result.documents.firstOrNull() { it.data?.containsValue(email) == true }
+                val userDocument = result.documents.firstOrNull { it.data?.containsValue(email) == true }
 
                 if (userDocument != null) {
                     saveUserDocumentId(userDocument.id)
@@ -108,7 +107,17 @@ class FirebaseRepository @Inject constructor(
     fun updateStudySet(studySet: StudySet) {
         getStudySetDocument(studySet.id) { document ->
             document
-                .set(studySet)
+                .update(
+                    mapOf(
+                        "name" to studySet.name,
+                        "words" to studySet.words,
+                        "marked_words" to studySet.marked_words,
+                        "language_to" to studySet.language_to,
+                        "language_from" to studySet.language_from,
+                        "amount_of_words" to studySet.amount_of_words,
+                        "isFinished" to studySet.isFinished,
+                    )
+                )
                 .addOnSuccessListener {
                     Log.d(TAG, "Study set updated successfully")
                 }

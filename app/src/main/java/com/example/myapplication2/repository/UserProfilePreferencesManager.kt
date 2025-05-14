@@ -1,8 +1,8 @@
 package com.example.myapplication2.repository
 
 import android.content.SharedPreferences
-import javax.inject.Inject
 import androidx.core.content.edit
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
@@ -11,11 +11,7 @@ class UserProfilePreferencesManager @Inject constructor(
 ) {
 
     fun isLoggedIn(): Boolean {
-        return sharedPreferences.getString(KEY_IS_EMAIL, null) != null
-    }
-
-    fun setLoginEmail(email: String) {
-        sharedPreferences.edit { putString(KEY_IS_EMAIL, email) }
+        return getUserDocumentId() != null
     }
 
     fun setUserDocumentId(userDocumentId: String) {
@@ -28,13 +24,11 @@ class UserProfilePreferencesManager @Inject constructor(
 
     fun clearLoginEmail() {
         sharedPreferences.edit {
-            remove(KEY_IS_EMAIL)
             remove(KEY_USER_DOCUMENT_ID)
         }
     }
 
     companion object {
-        private const val KEY_IS_EMAIL = "key_email"
         private const val KEY_USER_DOCUMENT_ID = "key_user_document_id"
     }
 }

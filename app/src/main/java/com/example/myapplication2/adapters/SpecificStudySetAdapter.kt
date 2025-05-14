@@ -1,7 +1,5 @@
 package com.example.myapplication2.adapters
 
-import android.content.SharedPreferences
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +7,18 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication2.R
+import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
-import javax.inject.Inject
+import com.example.myapplication2.repository.StudySetRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-
-class SpecificStudySetAdapter @Inject constructor(
+class SpecificStudySetAdapter(
+    val studySet: StudySet,
+    val repository: StudySetRepository,
     private var mWords: List<Word>,
-    val sharedPreferences: SharedPreferences,
+    private val coroutineScope: CoroutineScope,
 ) : RecyclerView.Adapter<SpecificStudySetAdapter.SpecificStudySetHolder>() {
 
     class SpecificStudySetHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -33,44 +36,30 @@ class SpecificStudySetAdapter @Inject constructor(
     override fun onBindViewHolder(holder: SpecificStudySetHolder, position: Int) {
         val word = mWords[position]
 
-        Log.d(
-            "SpecificStudySetAdapter",
-            "Binding word: ${word.term} - ${word.translation}, isMarked: ${word.isMarked}"
-        )
-
         holder.term.text = word.term
         holder.translation.text = word.translation
-
-        holder.starBtn.setOnCheckedChangeListener(null) // сбрасываем предыдущий listener
+        holder.starBtn.setOnCheckedChangeListener(null)
         holder.starBtn.isChecked = word.isMarked
-
-        // Логируем текущее состояние звездочки
-        Log.d(
-            "SpecificStudySetAdapter",
-            "Initial star button state for ${word.term}: ${holder.starBtn.isChecked}"
-        )
 
         holder.starBtn.setOnCheckedChangeListener { _, isChecked ->
             word.isMarked = isChecked
-            // Логируем изменение состояния
-            Log.d(
-                "SpecificStudySetAdapter",
-                "Star button clicked for ${word.term}, new state: $isChecked"
-            )
 
-            // Сохраняем состояние звездочки в SharedPreferences с использованием уникального id
-            val key = "word_marked_${word.term}_${word.translation}".hashCode().toString()
-            sharedPreferences.edit().putBoolean(key, isChecked).apply()
+            coroutineScope.launch(Dispatchers.IO) {
+                val markedWords = if (isChecked) {
+                     buildString {
+                        append(studySet.marked_words)
+                        append("\n${word.term} - ${word.translation}")
+                    }
+                } else {
+                    studySet.marked_words.replace("\n${word.term} - ${word.translation}", "")
+                }
 
-            // Логируем результат сохранения
-            Log.d(
-                "SpecificStudySetAdapter",
-                "Saved star state for ${word.term} to SharedPreferences: $isChecked"
-            )
+                studySet.marked_words = markedWords.trim()
+                repository.update(studySet)
+            }
         }
 
     }
-
 
     override fun getItemCount(): Int = mWords.size
 
@@ -78,6 +67,4 @@ class SpecificStudySetAdapter @Inject constructor(
         mWords = newWords
         notifyDataSetChanged()
     }
-
-    fun getAllWords(): List<Word> = mWords
 }

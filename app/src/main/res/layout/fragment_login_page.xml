@@ -5,6 +5,7 @@
     android:id="@+id/loginLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/horizontalContentPadding"
     android:background="@drawable/login_background">
 
     <com.google.android.material.button.MaterialButton
