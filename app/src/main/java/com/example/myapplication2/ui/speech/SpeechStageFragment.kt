@@ -2,7 +2,6 @@ package com.example.myapplication2.ui.speech
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.LayoutInflater
@@ -35,12 +34,12 @@ class SpeechStageFragment : Fragment() {
 
                 if (recognizedText != null) {
                     if (recognizedText.equals(expected, ignoreCase = true)) {
-                        Toast.makeText(requireContext(), "Правильно!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Correct!", Toast.LENGTH_SHORT).show()
                         viewModel.nextWord()
                     } else {
                         Toast.makeText(
                             requireContext(),
-                            "Неправильно. Ожидалось: $expected\nВы сказали: $recognizedText",
+                            "Incorrect. Expected: $expected\nYou said: $recognizedText",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

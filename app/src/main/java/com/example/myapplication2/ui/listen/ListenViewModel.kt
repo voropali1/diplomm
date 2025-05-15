@@ -3,7 +3,6 @@ package com.example.myapplication2.ui.listen
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication2.model.StudySet
@@ -78,19 +77,6 @@ class ListenViewModel @Inject constructor(private val repository: StudySetReposi
         return _currentStudySet.value
     }
 
-    fun updateSetFinishedStatus(setId: Int) {
-        viewModelScope.launch {
-            try {
-                // Обновляем статус сета в репозитории
-                repository.updateSetFinishedStatus(setId)
-                // После успешного обновления можно установить флаг завершенности
-                _isCompleted.postValue(true)
-            } catch (e: Exception) {
-                // Логирование ошибки, если нужно
-                Log.e("ListenViewModel", "Ошибка обновления статуса сета", e)
-            }
-        }
-    }
 
 
 

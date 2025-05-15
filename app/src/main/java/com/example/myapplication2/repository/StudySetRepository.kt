@@ -1,11 +1,8 @@
 package com.example.myapplication2.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.myapplication2.database.DaoStudySet
 import com.example.myapplication2.model.StudySet
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,7 +28,6 @@ class StudySetRepository @Inject constructor(
     suspend fun update(studySet: StudySet) {
         dao.updateStudySet(studySet)
         firebaseRepository.updateStudySet(studySet)
-        Log.d("StudySetRepository", "Updated: ${studySet.name}")
     }
 
     suspend fun delete(studySet: StudySet) {

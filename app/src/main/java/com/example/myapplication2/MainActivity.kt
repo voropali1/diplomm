@@ -1,8 +1,6 @@
 package com.example.myapplication2
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -10,6 +8,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication2.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
 
 
             if (item.itemId == R.id.list_study_sets) {
-                Log.d("NAVIGATION", "Переход в Study Sets")
                 navController.navigate(R.id.list_study_sets)
                 true
             } else {

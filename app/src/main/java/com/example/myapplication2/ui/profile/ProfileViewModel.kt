@@ -1,17 +1,19 @@
 package com.example.myapplication2.ui.profile
 
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
+import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.UserProfile
 import com.example.myapplication2.repository.FirebaseRepository
 import com.example.myapplication2.repository.StudySetRepository
 import com.example.myapplication2.repository.UserProfileRepository
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.myapplication2.model.StudySet
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -36,7 +38,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadProfile() {
-        val username = sharedPreferences.getString("username", "Guest") ?: "Guest"
+        val username = sharedPreferences.getString("username", "Maksim") ?: "Maksim"
 
         _userProfile.value = UserProfile(username)
     }

@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.example.myapplication2.model.Word
 import com.example.myapplication2.databinding.FragmentAudioStageBinding
 import com.example.myapplication2.model.StudySet
+import com.example.myapplication2.model.Word
 import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -50,18 +49,18 @@ class ListenFragment : Fragment() {
 
         wordList?.let { viewModel.setWords(it) }
 
-        // Инициализация TTS
+
         tts = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 currentLanguageTag?.let { langTag ->
                     val locale = Locale.forLanguageTag(langTag)
                     val result = tts.setLanguage(locale)
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Toast.makeText(requireContext(), "Язык $langTag не поддерживается", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Language $langTag is not supported", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Ошибка инициализации TTS", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "TTS initialization failed", Toast.LENGTH_SHORT).show()
             }
         }
 
