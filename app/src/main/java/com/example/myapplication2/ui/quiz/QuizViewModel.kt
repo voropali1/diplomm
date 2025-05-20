@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation.findNavController
 
 
 import com.example.myapplication2.model.StudySet
@@ -39,7 +38,7 @@ class QuizViewModel @Inject constructor(private val repository: StudySetReposito
     private var currentIndex = 0
 
     fun setQuestionsFromWords(words: List<Word>) {
-        // Преобразуем список Word в список Question
+
         questionList = words.map { word ->
             val incorrectAnswers = words
                 .filter { it != word }
@@ -67,7 +66,7 @@ class QuizViewModel @Inject constructor(private val repository: StudySetReposito
             currentIndex++
         } else {
             viewModelScope.launch {
-                onCardsModeCompleted()
+                modeCompleted()
             }
         }
     }
@@ -80,12 +79,12 @@ class QuizViewModel @Inject constructor(private val repository: StudySetReposito
         _currentStudySet.value = studySet
     }
 
-    // Добавляем метод для получения текущего StudySet
+
     fun getCurrentStudySet(): StudySet? {
         return _currentStudySet.value
     }
 
-    private suspend fun onCardsModeCompleted() {
+    private suspend fun modeCompleted() {
         val setId = _currentStudySet.value?.id ?: return
         repository.updateSetFinishedStatus(setId)
         _isCompleted.postValue(true)

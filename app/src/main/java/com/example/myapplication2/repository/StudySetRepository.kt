@@ -13,8 +13,8 @@ class StudySetRepository @Inject constructor(
 ) {
     val allStudySets: LiveData<List<StudySet>> = dao.getAllStudySets()
 
-    suspend fun insertManyLocalOnly(studySets: List<StudySet>) {
-        dao.insertManyStudySets(studySets)
+    suspend fun upsertManyLocalOnly(studySets: List<StudySet>) {
+        dao.upsertMany(studySets)
     }
 
     suspend fun insert(studySet: StudySet): Long {
@@ -46,9 +46,9 @@ class StudySetRepository @Inject constructor(
     suspend fun updateSetFinishedStatus(setId: Int) {
         val studySet = dao.getNoLiveDataSpecificStudySet(setId)
         studySet?.let {
-            // Update the finished status to true (or some other status change)
+
             it.isFinished = true
-            dao.updateStudySet(it)  // Assuming this method exists to update the study set in your DB
+            dao.updateStudySet(it)
             firebaseRepository.updateSetFinished(setId)
         }
     }

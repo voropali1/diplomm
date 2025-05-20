@@ -71,7 +71,6 @@ class FirebaseRepository @Inject constructor(
     }
 
     fun getAllStudySets(onSuccess: (List<StudySet>) -> Unit, onError: () -> Unit) {
-        Log.d(TAG, "getAllStudySets() called")
         getStudySetsCollection()
             .get()
             .addOnSuccessListener { result ->
@@ -94,7 +93,6 @@ class FirebaseRepository @Inject constructor(
             }
             .addOnFailureListener { exception ->
                 onError()
-                Log.w(TAG, "Error getting documents.", exception)
             }
     }
 

@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.R
 import com.example.myapplication2.databinding.FragmentTermDefinitionStageBinding
 import com.example.myapplication2.model.StudySet
-import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -28,7 +27,6 @@ class TranslationStageFragment : Fragment() {
 
     private lateinit var tts: TextToSpeech
     private var currentLanguageTag: String? = null
-    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,15 +34,12 @@ class TranslationStageFragment : Fragment() {
     ): View {
         _binding = FragmentTermDefinitionStageBinding.inflate(inflater, container, false)
 
-        // Получаем сет и язык
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
-        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
         receivedSet?.let {
             viewModel.setCurrentStudySet(it)
-            currentLanguageTag = it.language_from // <-- язык, с которого идёт перевод
+            currentLanguageTag = it.language_from
         }
 
-        // Инициализируем TextToSpeech
         tts = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 currentLanguageTag?.let { langTag ->
@@ -53,49 +48,31 @@ class TranslationStageFragment : Fragment() {
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Toast.makeText(
                             requireContext(),
-                            "Язык $langTag не поддерживается",
+                            "Language $langTag is not supported",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Ошибка инициализации TTS", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), "TTS initialization error", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Отображение текущего слова (term)
         viewModel.currentWord.observe(viewLifecycleOwner) { word ->
             binding.termTV.text = word.term
         }
 
-        // Наблюдение за завершением режима
         viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
-            if (completed && isFullSet) {
-                // Проверяем, был ли сет уже завершён
-                val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
-                if (studySet != null && !studySet.isFinished) {
-                    // Обновляем статус завершённости сета
-                    profileViewModel.updateCompletedSets(studySet)
-                    // Обновляем флаг завершённости в объекте StudySet
-                    studySet.isFinished = true
-                }
+            if (completed) {
                 findNavController().popBackStack()
             }
         }
 
-        // Озвучка по кнопке
         binding.volumeUpIB.setOnClickListener {
             val wordToSpeak = binding.termTV.text.toString()
             speakWord(wordToSpeak)
-            Toast.makeText(
-                requireContext(),
-                "Используется язык: $currentLanguageTag",
-                Toast.LENGTH_SHORT
-            ).show()
         }
 
-        // Проверка по кнопке
         binding.checkAnswerBtn.setOnClickListener {
             val answer = binding.answerET.text.toString()
             val isCorrect = viewModel.checkAnswer(answer)
@@ -110,7 +87,6 @@ class TranslationStageFragment : Fragment() {
             binding.emojiContainer.visibility = View.VISIBLE
             animation?.start()
 
-            // скрыть emoji через 1000 мс
             binding.emojiContainer.postDelayed({
                 _binding?.emojiContainer?.visibility = View.GONE
             }, 1000)
@@ -128,7 +104,6 @@ class TranslationStageFragment : Fragment() {
             }
         }
 
-        // Проверка по Enter
         binding.answerET.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val answer = binding.answerET.text.toString()

@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.UserProfile
 import com.example.myapplication2.repository.FirebaseRepository
 import com.example.myapplication2.repository.StudySetRepository
@@ -38,15 +37,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadProfile() {
-        val username = sharedPreferences.getString("username", "Maksim") ?: "Maksim"
+        //val username = sharedPreferences.getString("username", "Maksim") ?: "Maksim"
+       // Log.d("ProfileViewModel", "Username from SharedPreferences: $username")
 
-        _userProfile.value = UserProfile(username)
-    }
 
-    fun updateCompletedSets(studySet: StudySet) {
-        viewModelScope.launch {
-            repository.updateSetFinishedStatus(studySet.id)
-        }
+       // _userProfile.value = UserProfile(username)
     }
 
     suspend fun signOut() {
@@ -58,7 +53,7 @@ class ProfileViewModel @Inject constructor(
         firebaseRepository.getAllStudySets(
             onSuccess = { studySets ->
                 viewModelScope.launch {
-                    repository.insertManyLocalOnly(studySets)
+                    repository.upsertManyLocalOnly(studySets)
                     showLoader.value = false
                 }
             },
@@ -73,6 +68,3 @@ data class Statistics(
     val totalSets: Int,
     val completedSets: Int,
 )
-
-
-

@@ -8,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.adapters.StudySetsAdapter
 import com.example.myapplication2.databinding.FragmentStudySetsBinding
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.ui.detail.StudySetDetailsActivity
 import com.example.myapplication2.ui.profile.ProfileViewModel
-import com.example.myapplication2.utils.isTablet
 import com.example.myapplication2.utils.getTabletLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,8 +24,8 @@ class StudySetsListFragment : Fragment() {
 
     private val viewModel: StudySetsListViewModel by viewModels()
     private lateinit var adapter: StudySetsAdapter
-    private var fullList: List<StudySet> = emptyList() // Полный список сетов
-    private val profileViewModel: ProfileViewModel by viewModels() // добавь это
+    private var fullList: List<StudySet> = emptyList()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -36,9 +34,8 @@ class StudySetsListFragment : Fragment() {
     ): View {
         _binding = FragmentStudySetsBinding.inflate(inflater, container, false)
 
-        // Создаем адаптер с явным указанием типа для пустого списка
         adapter = StudySetsAdapter(
-            itemsList = emptyList(),  // Указываем пустой список типа List<StudySet>
+            itemsList = emptyList(),
             callback = object : StudySetsAdapter.Callback {
                 override fun onDeleteClicked(item: StudySet, position: Int) {
                     viewModel.deleteStudySet(item)
@@ -90,7 +87,7 @@ class StudySetsListFragment : Fragment() {
         } else {
             binding.textPlaceholder.visibility = View.GONE
             binding.recyclerView.visibility = View.VISIBLE
-            adapter.updateList(filteredList) // Обновляем адаптер с фильтрованным списком
+            adapter.updateList(filteredList)
         }
     }
 

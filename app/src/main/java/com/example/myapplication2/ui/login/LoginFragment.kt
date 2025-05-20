@@ -93,7 +93,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleFailure(e: Exception) {
-        Toast.makeText(requireContext(), "${e.message}", Toast.LENGTH_SHORT).show()
+        Log.e(TAG, "handleFailure: $e")
     }
 
     private fun handleSignIn(result: GetCredentialResponse) {

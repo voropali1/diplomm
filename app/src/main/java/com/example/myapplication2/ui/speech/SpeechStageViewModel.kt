@@ -40,20 +40,19 @@ class SpeechStageViewModel @Inject constructor(
         _currentStudySet.value = studySet
     }
 
-    // Получаем текущее слово
+
     fun getExpectedTerm(): String {
         return _currentWord.value?.translation ?: ""
     }
 
-    // Переход к следующему слову
+
     fun nextWord() {
         if (currentIndex + 1 < wordList.size) {
             currentIndex++
             _currentWord.value = wordList[currentIndex]
         } else {
-            // Завершаем сета
             viewModelScope.launch {
-                onCardsModeCompleted()  // Вызов внутри корутины
+                modeCompleted()
             }
         }
     }
@@ -61,18 +60,17 @@ class SpeechStageViewModel @Inject constructor(
         return _currentStudySet.value
     }
 
-    // Проверяем, является ли текущее слово последним
     fun isLastWord(): Boolean {
         return currentIndex == wordList.size - 1
     }
 
     fun isLastWordTrue() {
         viewModelScope.launch {
-            onCardsModeCompleted()  // Вызов внутри корутины
+            modeCompleted()
         }
     }
 
-    private suspend fun onCardsModeCompleted() {
+    private suspend fun modeCompleted() {
         val setId = _currentStudySet.value?.id ?: return
         repository.updateSetFinishedStatus(setId)
         _isCompleted.postValue(true)

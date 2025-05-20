@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.databinding.FragmentSpeechStageBinding
 import com.example.myapplication2.model.StudySet
-import com.example.myapplication2.ui.profile.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,6 @@ class SpeechStageFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SpeechStageViewModel by viewModels()
-    private val profileViewModel: ProfileViewModel by viewModels()
 
     private val speechRecognizerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -53,27 +53,18 @@ class SpeechStageFragment : Fragment() {
     ): View {
         _binding = FragmentSpeechStageBinding.inflate(inflater, container, false)
 
-        // Устанавливаем сет, если передан через arguments
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
-        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
         receivedSet?.let {
             viewModel.setCurrentStudySet(it)
         }
 
-        // Подписка на отображение текущего слова
         viewModel.currentWord.observe(viewLifecycleOwner) { word ->
             binding.translationTV.text = word.translation
         }
 
         viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
-            val currentStudySet = viewModel.getCurrentStudySet()
-            if (completed && isFullSet && currentStudySet != null) {
-                // Проверяем, было ли завершение сета после последнего слова
-                if (!currentStudySet.isFinished) {
-                    // Устанавливаем флаг завершенности сета
-                    profileViewModel.updateCompletedSets(currentStudySet)
-                    currentStudySet.isFinished = true
-                }
+            if (completed) {
+                findNavController().popBackStack()
             }
         }
 
@@ -81,9 +72,12 @@ class SpeechStageFragment : Fragment() {
             val currentLanguage = viewModel.currentStudySet.value?.language_to
             Toast.makeText(
                 requireContext(),
-                "Используется язык: $currentLanguage",
+                "Current language: $currentLanguage",
                 Toast.LENGTH_SHORT
             ).show()
+            Log.d("LANG_CHECK", "Lang from study set: ${currentLanguage}")
+
+
 
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(
@@ -91,7 +85,7 @@ class SpeechStageFragment : Fragment() {
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
                 )
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, currentLanguage)
-                putExtra(RecognizerIntent.EXTRA_PROMPT, "Скажите слово...")
+                putExtra(RecognizerIntent.EXTRA_PROMPT, "Say the word...")
             }
 
             try {
@@ -99,14 +93,13 @@ class SpeechStageFragment : Fragment() {
             } catch (e: Exception) {
                 Toast.makeText(
                     requireContext(),
-                    "Распознавание речи недоступно",
+                    "Speech recognition is not available",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
 
         binding.cannotSpeakBTN.setOnClickListener {
-            // Устанавливаем флаг завершенности сета, если это последнее слово
             if (viewModel.isLastWord()) {
                 viewModel.isLastWordTrue()
             }

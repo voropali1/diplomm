@@ -84,8 +84,8 @@ class StudySetsAdapter(
     fun updateList(newList: List<StudySet>) {
         val diffCallback = StudySetDiffCallback(filteredList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        originalList = newList // Обновляем оригинальный список
-        filteredList = newList // Обновляем фильтрованный список
+        originalList = newList
+        filteredList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 

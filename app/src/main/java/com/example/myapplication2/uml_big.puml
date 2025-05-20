@@ -23,7 +23,6 @@ class CardViewHolder {
 }
 
 CardsAdapter --> CardViewHolder : contains
-CardViewHolder --> Word : binds
 
 class StudySetDetailsFragment {
     - _binding: ActivitySpecificStudysetBinding?
@@ -33,10 +32,8 @@ class StudySetDetailsFragment {
     - sharedPreferences: SharedPreferences
     --
     + onCreate(savedInstanceState: Bundle?): void
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     + onCreateOptionsMenu(menu: Menu, inflater: MenuInflater): void
     + onOptionsItemSelected(item: MenuItem): Boolean
-    + onDestroyView(): void
     - parseWordsFromString(wordsString: String): List<Word>
     - loadMarkedFlags(wordsList: List<Word>): void
     - saveMarkedWords(): void
@@ -66,15 +63,11 @@ class Word {
 }
 
 StudySetDetailsFragment --> SpecificStudySetAdapter : uses
-StudySetDetailsFragment --> Word : manages
 StudySetDetailsFragment --> StudySet : manages
 SpecificStudySetAdapter --> SpecificStudySetHolder : contains
-SpecificStudySetHolder --> Word : binds
 
 class CardModeFragment {
     - viewModel: CardModeViewModel
-    --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 }
 
 class CardModeViewModel {
@@ -88,7 +81,6 @@ class CardModeViewModel {
 
 CardModeFragment --> CardModeViewModel : uses
 CardModeFragment --> CardsAdapter : uses
-CardModeViewModel --> Word : manages
 
 class CreateStudySetFragment {
     - _binding: FragmentCreateStudySetBinding?
@@ -100,15 +92,12 @@ class CreateStudySetFragment {
     - isEditMode: Boolean
     - existingSet: StudySet?
     --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onViewCreated(view: View, savedInstanceState: Bundle?): void
     - saveStudySet(): void
     - fillFieldsForEditing(set: StudySet): void
     - setSpinnerByShort(spinner: Spinner, langShort: String): void
     - setupLanguageSpinners(): void
     + onCreateOptionsMenu(menu: Menu, inflater: MenuInflater): void
     + onOptionsItemSelected(item: MenuItem): Boolean
-    + onDestroyView(): void
 }
 
 class CreateStudySetViewModel {
@@ -135,7 +124,6 @@ class WordsViewHolder {
 }
 
 WordsAdapter --> WordsViewHolder : contains
-WordsViewHolder --> Word : binds
 
 class StudySet {
     + id: Int
@@ -209,9 +197,6 @@ class ListenFragment {
     - _binding: FragmentAudioStageBinding?
     - binding: FragmentAudioStageBinding
     - viewModel: ListenViewModel
-    --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onDestroyView(): void
 }
 
 class ListenViewModel {
@@ -224,15 +209,11 @@ class ListenViewModel {
 }
 
 ListenFragment --> ListenViewModel : uses
-ListenViewModel --> Word : manages
 
 class SpeechStageFragment {
     - _binding: FragmentSpeechStageBinding?
     - binding: FragmentSpeechStageBinding
     - viewModel: SpeechStageViewModel
-    --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onDestroyView(): void
 }
 
 class SpeechStageViewModel {
@@ -246,7 +227,6 @@ class SpeechStageViewModel {
 }
 
 SpeechStageFragment --> SpeechStageViewModel : uses
-SpeechStageViewModel --> Word : manages
 
 class StudySetsListFragment {
     - _binding: FragmentStudySetsBinding?
@@ -255,8 +235,6 @@ class StudySetsListFragment {
     - adapter: StudySetsAdapter
     - fullList: List<StudySet>
     --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onDestroyView(): void
     - updateFilteredList(query: String): void
 }
 
@@ -278,9 +256,6 @@ class TermStageFragment {
     - _binding: FragmentTermDefinitionStageBinding?
     - binding: FragmentTermDefinitionStageBinding
     - viewModel: TermStageViewModel
-    --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onDestroyView(): void
 }
 
 class TermStageViewModel {
@@ -294,15 +269,11 @@ class TermStageViewModel {
 }
 
 TermStageFragment --> TermStageViewModel : uses
-TermStageViewModel --> Word : manages
 
 class TranslationStageFragment {
     - _binding: FragmentTermDefinitionStageBinding?
     - binding: FragmentTermDefinitionStageBinding
     - viewModel: TranslationStageViewModel
-    --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onDestroyView(): void
 }
 
 class TranslationStageViewModel {
@@ -316,7 +287,6 @@ class TranslationStageViewModel {
 }
 
 TranslationStageFragment --> TranslationStageViewModel : uses
-TranslationStageViewModel --> Word : manages
 class BaseVariables {
     {static} + LANGUAGES: List<String>
     {static} + LANGUAGES_SHORT: List<String>
@@ -400,9 +370,6 @@ class QuizFragment {
   - viewModel: QuizViewModel
   - wordList: List<Word>
   + onCreate(savedInstanceState: Bundle?): Unit
-  + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-  + onViewCreated(view: View, savedInstanceState: Bundle?): Unit
-  + onDestroyView(): Unit
 }
 
 QuizViewModel "1" *-- "0..N  " Question : contains
@@ -413,9 +380,6 @@ QuizFragment --> Question : uses >
 class NotificationsFragment {
     - _binding: FragmentNotificationsBinding?
     - binding: FragmentNotificationsBinding
-    --
-    + onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-    + onDestroyView(): void
 }
 
 class NotificationsViewModel {
@@ -424,4 +388,183 @@ class NotificationsViewModel {
 }
 
 NotificationsFragment --> NotificationsViewModel : uses
+
+class FirebaseRepository {
+    - db: FirebaseFirestore
+    - userProfilePreferencesManager: UserProfilePreferencesManager
+    --
+    + createUser(email: String, onSuccess: () -> Unit, onError: () -> Unit): void
+    + addStudySet(studySet: StudySet, onSuccess: () -> Unit, onError: () -> Unit): void
+    + getAllStudySets(onSuccess: (List<StudySet>) -> Unit, onError: () -> Unit): void
+    + updateStudySet(studySet: StudySet): void
+    + deleteStudySet(studySet: StudySet): void
+    + updateSetFinished(studySetId: Int): void
+    --
+    - saveUserDocumentId(documentId: String): void
+    - getStudySetsCollection(): CollectionReference
+    - getStudySetDocument(studySetId: Int, onDocumentOperation: (DocumentReference) -> Unit): void
+    --
+    {static} - TAG: String
+    {static} - USERS_COLLECTION: String
+    {static} - STUDY_SETS_COLLECTION: String
+    {static} - EMAIL_FIELD: String
+    {static} - STUDY_SET_ID_FIELD: String
+}
+
+FirebaseRepository --> UserProfilePreferencesManager : uses
+
+class UserProfilePreferencesManager {
+    - sharedPreferences: SharedPreferences
+    --
+    + isLoggedIn(): Boolean
+    + setUserDocumentId(userDocumentId: String): void
+    + getUserDocumentId(): String?
+    + clearLoginEmail(): void
+    --
+    {static} - KEY_USER_DOCUMENT_ID: String
+}
+
+UserProfilePreferencesManager --> SharedPreferences : uses
+
+class UserProfileRepository {
+    - userProfilePreferencesManager: UserProfilePreferencesManager
+    - studySetRepository: StudySetRepository
+    --
+    + isLoggedIn(): Boolean
+    + logout(): suspend Unit
+}
+
+UserProfileRepository --> UserProfilePreferencesManager : uses
+UserProfileRepository --> StudySetRepository : uses
+
+class StudySetDetailsActivity {
+    - binding: ActivityStudySetBinding
+    --
+    + onCreate(savedInstanceState: Bundle?): void
+    + onSupportNavigateUp(): Boolean
+    --
+    {static} - KEY_STUDY_SET: String
+    {static} + newIntent(context: Context, studySet: StudySet): Intent
+}
+
+class LoginActivity {
+    - binding: ActivityLoginBinding
+    --
+    + onCreate(savedInstanceState: Bundle?): void
+}
+
+class LoginFragment {
+    - _binding: FragmentLoginPageBinding?
+    - clientId: String
+    - viewModel: LoginViewModel
+    --
+    + googleSignIn(): void
+    + googleSignUp(): void
+    + googleAuth(googleIdOption: GetGoogleIdOption): void
+    + handleFailure(e: Exception): void
+    + handleSignIn(result: GetCredentialResponse): void
+    + openMainActivity(email: String): void
+    + showLoader(): void
+    + hideLoader(): void
+    + handleShowError(error: String?): void
+    + handleStartMainActivity(event: Unit?): void
+    + handleLoading(show: Boolean?): void
+}
+
+LoginFragment --> LoginViewModel : uses
+
+class LoginViewModel {
+    - firebaseRepository: FirebaseRepository
+    - studySetRepository: StudySetRepository
+    - loader: MutableLiveData<Boolean>
+    - startMainActivity: MutableLiveData<Unit?>
+    - showError: MutableLiveData<String?>
+    --
+    + login(email: String): void
+    + handleCreateUserSuccess(): void
+    + handleGetAllStudySetsFailed(): void
+    + handleGetAllStudySetsSuccess(studySets: List<StudySet>): void
+    + startMainActivity(): void
+    + handleCreateUserFailure(): void
+    + hideLoader(): void
+    + showLoader(): void
+}
+
+LoginViewModel --> FirebaseRepository : uses
+LoginViewModel --> StudySetRepository : uses
+
+class ProfileFragment {
+    - _binding: FragmentProfileBinding?
+    - viewModel: ProfileViewModel
+    --
+    + updateProfile(): void
+    + syncData(): void
+    --
+    {static} - TAG: String
+}
+
+ProfileFragment --> ProfileViewModel : uses
+
+class ProfileViewModel {
+    - sharedPreferences: SharedPreferences
+    - repository: StudySetRepository
+    - userProfileRepository: UserProfileRepository
+    - firebaseRepository: FirebaseRepository
+    - _userProfile: MutableLiveData<UserProfile>
+    - showLoader: MutableLiveData<Boolean?>
+    --
+    + userProfile: LiveData<UserProfile>
+    + statistics: LiveData<Statistics>
+    + updateCompletedSets(studySet: StudySet): void
+    + signOut(): suspend Unit
+    + sync(): void
+}
+
+ProfileViewModel --> StudySetRepository : uses
+ProfileViewModel --> UserProfileRepository : uses
+ProfileViewModel --> FirebaseRepository : uses
+
+class MySplashActivity {
+    - userProfileRepository: UserProfileRepository
+    --
+    + onCreate(savedInstanceState: Bundle?): void
+}
+
+MySplashActivity --> UserProfileRepository : uses
+MySplashActivity --> MainActivity : navigates
+MySplashActivity --> LoginActivity : navigates
+
+class LoginViewModelTest {
+    - viewModel: LoginViewModel
+    - firebaseRepository: FirebaseRepository
+    - studySetRepository: StudySetRepository
+    - loaderObserver: Observer<Boolean>
+    - startMainActivityObserver: Observer<Unit?>
+    - showErrorObserver: Observer<String?>
+    --
+    + setup(): void
+    + testLoginSuccess(): void
+    + testLoginFailure(): void
+    + testHandleCreateUserSuccess(): void
+    + testHandleCreateUserFailure(): void
+    + tearDown(): void
+}
+
+LoginViewModelTest --> LoginViewModel : tests
+
+class StudySetRepositoryTest {
+    - repository: StudySetRepository
+    - dao: DaoStudySet
+    - database: StudySetDatabase
+    --
+    + setup(): void
+    + testInsertStudySet(): void
+    + testUpdateStudySet(): void
+    + testDeleteStudySet(): void
+    + testGetAllStudySets(): void
+    + tearDown(): void
+}
+
+StudySetRepositoryTest --> DaoStudySet : mocks
+StudySetRepositoryTest --> StudySetDatabase : mocks
 @enduml

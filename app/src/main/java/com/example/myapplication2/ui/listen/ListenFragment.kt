@@ -1,18 +1,20 @@
 package com.example.myapplication2.ui.listen
 
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.databinding.FragmentAudioStageBinding
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
-import com.example.myapplication2.ui.profile.ProfileViewModel
+import com.example.myapplication2.utils.getEmoji
+import com.example.myapplication2.utils.getEmojiMessage
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -23,11 +25,11 @@ class ListenFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ListenViewModel by viewModels()
-    private val profileViewModel: ProfileViewModel by viewModels()
+    private var ttsInitialized = false
+
 
     private lateinit var tts: TextToSpeech
     private var currentLanguageTag: String? = null
-    private var com = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,18 +39,13 @@ class ListenFragment : Fragment() {
 
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
         val wordList = arguments?.getSerializable("words") as? ArrayList<Word>
-        val isFullSet = arguments?.getBoolean("isFullSet") ?: false
 
-        if (receivedSet == null) {
-            Log.d("ListenFragment", "NUUUULLLL")
-        }
         receivedSet?.let {
             currentLanguageTag = it.language_from
             viewModel.setCurrentStudySet(it)
         }
 
         wordList?.let { viewModel.setWords(it) }
-
 
         tts = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -64,70 +61,50 @@ class ListenFragment : Fragment() {
             }
         }
 
-        // Когда появляется новое слово
         viewModel.currentWord.observe(viewLifecycleOwner) { word ->
-            if (word != null) {
-                speakWord(word.term, normal = true)
-            }
+
             if (word != null) {
                 binding.translationHint.text = word.translation
             }
         }
 
-
-
-
-        // Нормальная озвучка
         binding.speakTermIB.setOnClickListener {
             viewModel.currentWord.value?.term?.let { speakWord(it, normal = true) }
         }
 
-        // Замедленная озвучка
         binding.speakTermSlowIB.setOnClickListener {
             viewModel.currentWord.value?.term?.let { speakWord(it, normal = false) }
         }
 
-        // Проверка
         binding.nextPageBTN.setOnClickListener {
-            // Получаем ответ из поля ввода
             val answer = binding.definitionAudiostageET.text.toString()
-
-            // Проверяем правильность ответа
             val isCorrect = viewModel.checkAnswer(answer)
 
-            // Получаем текущий сет и флаг завершенности
-            val studySet = viewModel.getCurrentStudySet()
-            Log.d("ListenFragment", "isCompleted: ${viewModel.isCompleted.value}, isFullSet: $isFullSet, studySet.isFinished: ${studySet?.isFinished}")
+            val text = getEmojiMessage(isCorrect)
+            val drawableRes = getEmoji(isCorrect)
 
-            // Логируем, является ли текущее слово последним
-            val isLastWord = viewModel.isLastWord()
-            Log.d("ListenFragment", "Is last word: $isLastWord")
+            binding.emojiTextTV.text = text
+            binding.emojiIV.setImageResource(drawableRes)
+            val animation = binding.emojiIV.drawable as? Animatable
 
-            // Очистка текстового поля после проверки
+            binding.emojiContainer.visibility = View.VISIBLE
+            animation?.start()
+
+            binding.emojiContainer.postDelayed({
+                _binding?.emojiContainer?.visibility = View.GONE
+                viewModel.nextWord()
+            }, 1000)
+
             binding.definitionAudiostageET.text.clear()
         }
 
-
         viewModel.isCompleted.observe(viewLifecycleOwner) { completed ->
-            Log.d("ListenFragment", "isCompleted: $completed, isFullSet: $isFullSet")
-            if (completed && isFullSet) {
-                // Проверяем, был ли сет уже завершён
-                val studySet = viewModel.getCurrentStudySet() // Получаем текущий сет
-                Log.d("ListenFragment", "studySet: ${studySet?.id}, isFinished: ${studySet?.isFinished}")
-                if (studySet != null && !studySet.isFinished) {
-                    // Обновляем статус завершённости сета
-                    profileViewModel.updateCompletedSets(studySet)
-                    // Обновляем флаг завершенности сета
-                    studySet.isFinished = true
-                    Log.d("ListenFragment", "studySet is now finished: ${studySet.isFinished}")
-                }
+            if (completed) {
+                findNavController().navigateUp()
             }
         }
 
-
-        // Пропустить (не могу прослушать)
         binding.cannotSpeakBTN.setOnClickListener {
-            // Устанавливаем флаг завершенности сета, если это последнее слово
             if (viewModel.isLastWord()) {
                 viewModel.isLastWordTrue()
             }

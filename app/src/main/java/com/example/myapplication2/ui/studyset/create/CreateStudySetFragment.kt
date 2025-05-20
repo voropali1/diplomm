@@ -191,7 +191,6 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
 
     private fun saveStudySet() {
         val name = binding.titleEdittext.text.toString().trim()
-        // Проверка на пустое имя и отсутствие слов
         if (name.isEmpty() || wordsAdapter.itemCount == 0) {
             Toast.makeText(
                 requireContext(),
@@ -201,7 +200,6 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
             return
         }
 
-        // Проверка на пустые поля term и translation для каждого слова
         for (word in wordsAdapter.getWords()) {
             if (word.term.isEmpty() || word.translation.isEmpty()) {
                 Toast.makeText(
@@ -214,7 +212,10 @@ class CreateStudySetFragment : Fragment(R.layout.fragment_create_study_set) {
         }
 
         val wordsString =
-            wordsAdapter.getWords().joinToString("\n") { "${it.term} - ${it.translation}" }
+            wordsAdapter.getWords().joinToString("\n") {
+                val cleanTranslation = it.translation.replace("\n", " ")
+                "${it.term} - ${cleanTranslation}"
+            }
 
         var studySet = if (isEditMode) {
             existingSet?.apply {

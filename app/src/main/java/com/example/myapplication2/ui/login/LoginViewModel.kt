@@ -1,12 +1,8 @@
 package com.example.myapplication2.ui.login
 
-import android.content.Intent
-import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication2.MainActivity
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.repository.FirebaseRepository
 import com.example.myapplication2.repository.StudySetRepository
@@ -48,7 +44,7 @@ class LoginViewModel @Inject constructor(
 
     private fun handleGetAllStudySetsSuccess(studySets: List<StudySet>) {
         viewModelScope.launch {
-            studySetRepository.insertManyLocalOnly(studySets)
+            studySetRepository.upsertManyLocalOnly(studySets)
             hideLoader()
             startMainActivity()
         }

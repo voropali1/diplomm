@@ -21,7 +21,6 @@ class TranslationStageViewModel @Inject constructor(
     private var currentIndex = 0
 
     private val _currentStudySet = MutableLiveData<StudySet>()
-    val currentStudySet: LiveData<StudySet> get() = _currentStudySet
 
     private val _currentWord = MutableLiveData<Word>()
     val currentWord: LiveData<Word> = _currentWord
@@ -37,9 +36,7 @@ class TranslationStageViewModel @Inject constructor(
 
     fun checkAnswer(answer: String): Boolean {
         val correct = currentWord.value?.translation.equals(answer.trim(), ignoreCase = true)
-        //if (correct) {
-        //    nextWord()
-        //}
+
         return correct
     }
 
@@ -48,9 +45,8 @@ class TranslationStageViewModel @Inject constructor(
             currentIndex++
             _currentWord.value = wordList[currentIndex]
         } else {
-            // Завершаем обучение — вызываем suspend-функцию в корутине
             viewModelScope.launch {
-                onCardsModeCompleted()
+                modeCompleted()
             }
         }
     }
@@ -59,11 +55,7 @@ class TranslationStageViewModel @Inject constructor(
         _currentStudySet.value = studySet
     }
 
-    fun getCurrentStudySet(): StudySet? {
-        return _currentStudySet.value
-    }
-
-    private suspend fun onCardsModeCompleted() {
+    private suspend fun modeCompleted() {
         val setId = _currentStudySet.value?.id ?: return
         repository.updateSetFinishedStatus(setId)
         _isCompleted.postValue(true)

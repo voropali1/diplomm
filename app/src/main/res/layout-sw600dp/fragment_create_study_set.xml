@@ -1,9 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
+
+    <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+        <RelativeLayout
+          android:layout_marginHorizontal="@dimen/horizontalContentPadding"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/create_study_set_LL"
@@ -16,14 +24,12 @@
             android:id="@+id/title_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/horizontalContentPadding"
             android:hint="@string/title"
             android:minHeight="48dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/horizontalContentPadding"
             android:layout_marginTop="24dp">
 
             <LinearLayout
@@ -85,11 +91,8 @@
             android:id="@+id/result_LL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/horizontalContentPadding"
             android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -125,6 +128,8 @@
         android:clipToPadding="false"
         android:paddingBottom="40dp"
         />
+        </RelativeLayout>
+    </ScrollView>
 
     <!-- Перенёс commit_words_btn ВНЕ result_LL, теперь она ВСЕГДА видна -->
 

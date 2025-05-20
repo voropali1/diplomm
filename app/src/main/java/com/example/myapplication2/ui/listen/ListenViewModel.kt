@@ -1,6 +1,5 @@
 package com.example.myapplication2.ui.listen
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,8 +22,6 @@ class ListenViewModel @Inject constructor(private val repository: StudySetReposi
     private val _isCompleted = MutableLiveData<Boolean>()
     val isCompleted: LiveData<Boolean> = _isCompleted
     private val _currentStudySet = MutableLiveData<StudySet>()
-    val currentStudySet: LiveData<StudySet> get() = _currentStudySet
-
 
     fun setWords(words: List<Word>) {
         wordList = words
@@ -40,12 +37,7 @@ class ListenViewModel @Inject constructor(private val repository: StudySetReposi
 
     fun checkAnswer(answer: String): Boolean {
         val correct = _currentWord.value?.term?.trim()?.equals(answer.trim(), ignoreCase = true) == true
-        if (correct) nextWord()
         return correct
-    }
-
-    fun skipWord() {
-        nextWord()
     }
 
     fun nextWord() {
@@ -53,7 +45,6 @@ class ListenViewModel @Inject constructor(private val repository: StudySetReposi
             currentIndex++
             _currentWord.value = wordList[currentIndex]
         } else {
-
             viewModelScope.launch {
                 onListenModeCompleted()
             }
@@ -66,32 +57,14 @@ class ListenViewModel @Inject constructor(private val repository: StudySetReposi
 
     fun isLastWordTrue() {
         viewModelScope.launch {
-            onListenModeCompleted()// Вызов внутри корутины
+            onListenModeCompleted()
         }
     }
-
-
-
-
-    fun getCurrentStudySet(): StudySet? {
-        return _currentStudySet.value
-    }
-
-
-
 
     private suspend fun onListenModeCompleted() {
-        Log.d("ListenViewModel", "currentStudySet: ${_currentStudySet.value}")
-        val setId = _currentStudySet.value?.id
-        if (setId == null) {
-            Log.d("ListenViewModel", "setId is null, returning...")
-            return
-        }
-        Log.d("ListenViewModel", "Is last word: , id: $setId")
+        val setId = _currentStudySet.value?.id ?: return
         repository.updateSetFinishedStatus(setId)
         _isCompleted.postValue(true)
     }
-
-
 }
 

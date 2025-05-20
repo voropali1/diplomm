@@ -1,12 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/horizontalContentPadding"
-    android:padding="15dp"
-    >
+    android:padding="15dp">
 
     <LinearLayout
         android:id="@+id/speak_RL"
@@ -73,4 +70,31 @@
         android:onClick="checkAnswerAudioStage"
         android:text="@string/can_not_listen"
         android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/emojiContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/next_page_BTN"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/emojiTextTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Correct"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageView
+            android:id="@+id/emojiIV"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerInside" />
+    </LinearLayout>
 </RelativeLayout>

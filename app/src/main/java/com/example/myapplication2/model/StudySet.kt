@@ -36,7 +36,7 @@ class StudySet : Serializable {
         this.creator = creator
         this.name = name
         this.words = words
-        this.marked_words = marked_words ?: ""// 👈 Добавляем и инициализируем
+        this.marked_words = marked_words ?: ""
         this.language_to = language_to
         this.language_from = language_from
         this.amount_of_words = amount_of_words

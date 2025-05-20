@@ -18,30 +18,24 @@ class CreateStudySetViewModel @Inject constructor(private val repository: StudyS
     private val _studySetLiveData = MutableLiveData<StudySet>()
     val studySetLiveData: LiveData<StudySet> = _studySetLiveData
 
-    // Для списка всех сетов
     val studySetsLiveData: LiveData<List<StudySet>> = repository.allStudySets
 
-    // Метод для добавления нового набора
     suspend fun addStudySet(studySet: StudySet): StudySet {
-        Log.d("CreateStudySetViewModel", "Добавляем сет: $studySet")
-        val newId = repository.insert(studySet) // Получаем ID после вставки
-        studySet.id = newId.toInt() // Обновляем ID в объекте studySet
-        loadStudySet(studySet.id) // Загружаем новый сет с актуальным ID
+        val newId = repository.insert(studySet)
+        studySet.id = newId.toInt()
+        loadStudySet(studySet.id)
         return studySet
     }
 
-    // Метод для обновления существующего набора
     suspend fun updateStudySet(studySet: StudySet) {
-        Log.d("CreateStudySetViewModel", "Обновляем сет: $studySet")
         repository.update(studySet)
     }
 
-    // Метод для загрузки данных с помощью ID
     fun loadStudySet(studySetId: Int) {
         viewModelScope.launch {
             try {
-                val studySet = repository.getStudySetById(studySetId.toLong())  // Получаем набор данных по ID из репозитория
-                _studySetLiveData.postValue(studySet!!)  // Обновляем LiveData
+                val studySet = repository.getStudySetById(studySetId.toLong())
+                _studySetLiveData.postValue(studySet!!)
             } catch (e: Exception) {
                 Log.e("CreateStudySetViewModel", "Error loading study set", e)
             }

@@ -8,17 +8,14 @@ import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication2.R
-import com.example.myapplication2.databinding.ItemCardBinding
 import com.example.myapplication2.model.Word
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -26,8 +23,8 @@ import kotlin.math.roundToInt
 class CardsAdapter(
     private val words: List<Word>,
     private val context: Context,
-    private val languageFrom: String,  // Язык термина
-    private val languageTo: String     // Язык перевода
+    private val languageFrom: String,
+    private val languageTo: String
 ) : RecyclerView.Adapter<CardsAdapter.CardViewHolder>(), TextToSpeech.OnInitListener {
 
     private var tts: TextToSpeech? = null
@@ -62,7 +59,6 @@ class CardsAdapter(
 
         holder.cardText.text = if (isFlipped) word.translation else word.term
 
-        // Переворот карточки
         holder.cardView.setOnClickListener {
             val adapterPosition = holder.adapterPosition
             if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
@@ -88,8 +84,7 @@ class CardsAdapter(
 
             flipOut.start()
         }
-
-        // Озвучка текста
+        
         holder.volumeBtn.setOnClickListener {
             val isFlippedNow = flippedStates[holder.adapterPosition]
             val textToSpeak = if (isFlippedNow) word.translation else word.term
@@ -99,7 +94,7 @@ class CardsAdapter(
                 val locale = Locale.forLanguageTag(langTag)
                 val result = tts?.setLanguage(locale)
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(context, "Язык $langTag не поддерживается", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Sorry, the selected language ($langTag) is not supported", Toast.LENGTH_SHORT).show()
                 } else {
                     tts?.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null)
                 }
@@ -113,7 +108,7 @@ class CardsAdapter(
         isTtsInitialized = status == TextToSpeech.SUCCESS
         tts?.setSpeechRate(0.7f)
         if (!isTtsInitialized) {
-            Toast.makeText(context, "Ошибка инициализации TTS", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "TTS initialization error", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -81,7 +81,7 @@ class StudySetDetailsFragment : Fragment() {
 
                 findNavController().navigate(R.id.definitionTermStageFragment, bundle)
             } else {
-                Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No words in this set", Toast.LENGTH_SHORT).show()
             }
         }
         binding.translationBtn.setOnClickListener {
@@ -101,54 +101,48 @@ class StudySetDetailsFragment : Fragment() {
 
                 findNavController().navigate(R.id.definitionTranslationStageFragment, bundle)
             } else {
-                Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No words in this set", Toast.LENGTH_SHORT).show()
             }
         }
 
 
         binding.cardsBtn.setOnClickListener {
-            // Фильтрация слов в зависимости от флага isStudyMarked
             val wordsToStudy = if (isStudyMarked) {
                 allWords.filter { it.isMarked }
             } else {
                 allWords
             }
 
-            // Преобразуем отфильтрованные слова в строку
             val wordsString = wordsToStudy.joinToString("\n") { "${it.term} - ${it.translation}" }
 
-            // Передаем в Bundle
             val bundle = Bundle().apply {
                 putString("wordsString", wordsString)
                 putSerializable("studySet", currentSet)
                 putBoolean("isFullSet", !isStudyMarked)
             }
 
-            // Навигация в CardModeFragment
             findNavController().navigate(R.id.action_studySetDetailsFragment_to_cardModeFragment, bundle)
         }
 
 
         binding.quizBtn.setOnClickListener {
-            // Фильтрация слов в зависимости от флага isStudyMarked
             val wordsToStudy = if (isStudyMarked) {
                 allWords.filter { it.isMarked }
             } else {
                 allWords
             }
 
-            // Проверка, достаточно ли слов для начала викторины
             if (wordsToStudy.size < 4) {
                 Toast.makeText(requireContext(), "At least 4 words are required to start the quiz", Toast.LENGTH_SHORT).show()
             } else {
-                // Передаем отфильтрованные слова в Bundle
+
                 val bundle = Bundle().apply {
                     putSerializable("words", ArrayList(wordsToStudy))
                     putSerializable("studySet", currentSet)
                     putBoolean("isFullSet", !isStudyMarked)
                 }
 
-                // Навигация в QuizFragment
+
                 findNavController().navigate(R.id.quizFragment, bundle)
             }
         }
@@ -163,7 +157,7 @@ class StudySetDetailsFragment : Fragment() {
             }
 
             val bundle = Bundle().apply {
-                putSerializable("words", ArrayList(wordsToStudy)) // Передаем отфильтрованные слова
+                putSerializable("words", ArrayList(wordsToStudy))
                 putSerializable("studySet", currentSet)
                 putBoolean("isFullSet", !isStudyMarked)
             }
@@ -181,13 +175,13 @@ class StudySetDetailsFragment : Fragment() {
 
             if (wordsToStudy.isNotEmpty()) {
                 val bundle = Bundle().apply {
-                    putSerializable("words", ArrayList(wordsToStudy)) // Передаем отфильтрованные слова
-                    putSerializable("studySet", currentSet) // Передаем StudySet
+                    putSerializable("words", ArrayList(wordsToStudy))
+                    putSerializable("studySet", currentSet)
                     putBoolean("isFullSet", !isStudyMarked)
                 }
                 findNavController().navigate(R.id.speechFragment, bundle)
             } else {
-                Toast.makeText(requireContext(), "Нет слов в этом сете", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No words in this set", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -254,14 +248,14 @@ class StudySetDetailsFragment : Fragment() {
             R.id.edit_study_set -> {
                 studySet?.let { set ->
                     val bundle = Bundle().apply {
-                        putSerializable("studySet", studySet) // studySet уже есть у тебя
+                        putSerializable("studySet", studySet)
                     }
                     findNavController().navigate(R.id.create_study_set, bundle)
                 }
                 true
             }
             R.id.share -> {
-                Toast.makeText(requireContext(), "Поделиться сетом", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Share the set", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)

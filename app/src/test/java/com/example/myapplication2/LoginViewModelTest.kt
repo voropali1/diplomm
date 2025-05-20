@@ -53,7 +53,7 @@ class LoginViewModelTest {
         every { firebaseRepository.getAllStudySets(any(), any()) } answers {
             firstArg<(List<StudySet>) -> Unit>().invoke(studySets)
         }
-        coEvery { studySetRepository.insertManyLocalOnly(studySets) } just runs
+        coEvery { studySetRepository.upsertManyLocalOnly(studySets) } just runs
 
         loginViewModel.login(email)
 
@@ -61,7 +61,7 @@ class LoginViewModelTest {
             loaderObserver.onChanged(true)
             firebaseRepository.createUser(email, any(), any())
             firebaseRepository.getAllStudySets(any(), any())
-            studySetRepository.insertManyLocalOnly(studySets)
+            studySetRepository.upsertManyLocalOnly(studySets)
             loaderObserver.onChanged(false)
             startMainActivityObserver.onChanged(Unit)
         }
@@ -108,4 +108,3 @@ class LoginViewModelTest {
         }
     }
 }
-
