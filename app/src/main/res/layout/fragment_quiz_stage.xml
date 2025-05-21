@@ -5,14 +5,14 @@
     android:padding="15dp">
 
     <Chronometer
+        android:id="@+id/quiz_chronometer"
         android:visibility="invisible"
         android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:textSize="20sp"
-        android:layout_height="wrap_content"
-        android:id="@+id/quiz_chronometer"/>
+        android:layout_height="wrap_content" />
 
-    <!-- Обернем TextView и ImageButton в LinearLayout для горизонтального выравнивания -->
+    <!-- Слово и кнопка звука — здесь ничего не менялось -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,6 +38,38 @@
             android:src="@drawable/ic_volume_up_blue_34dp" />
     </LinearLayout>
 
+    <!-- Эмодзи — отдельный элемент, позиционируется по центру экрана по горизонтали и сверху -->
+    <LinearLayout
+        android:id="@+id/emojiContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp"
+        android:elevation="8dp"
+        android:visibility="gone"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/emojiTextTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Correct"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/emojiIV"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+
+    <!-- Список ответов -->
     <LinearLayout
         android:id="@+id/answers_LL"
         android:layout_width="match_parent"
@@ -94,6 +126,5 @@
             android:textColor="@color/darkColor"
             android:textSize="20sp" />
     </LinearLayout>
+
 </RelativeLayout>
-
-

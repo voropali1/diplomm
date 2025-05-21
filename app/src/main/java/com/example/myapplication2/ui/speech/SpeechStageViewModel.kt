@@ -42,7 +42,7 @@ class SpeechStageViewModel @Inject constructor(
 
 
     fun getExpectedTerm(): String {
-        return _currentWord.value?.translation ?: ""
+        return _currentWord.value?.term ?: ""
     }
 
 

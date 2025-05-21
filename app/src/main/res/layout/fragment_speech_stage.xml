@@ -1,9 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    >
+    android:padding="20dp">
 
     <ImageButton
         android:id="@+id/voiceBtn"
@@ -28,7 +26,6 @@
         android:textColor="@color/darkColor"
         android:textSize="20sp" />
 
-
     <TextView
         android:id="@+id/translationHint"
         android:layout_width="wrap_content"
@@ -50,4 +47,34 @@
         android:onClick="skipSpeechStage"
         android:text="@string/can_not_speak"
         android:textSize="12sp" />
+
+    <!-- ВСТАВКА: Emoji результат -->
+    <LinearLayout
+        android:id="@+id/emojiContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cannot_speak_BTN"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/emojiTextTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Correct"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/emojiIV"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+
 </RelativeLayout>
+

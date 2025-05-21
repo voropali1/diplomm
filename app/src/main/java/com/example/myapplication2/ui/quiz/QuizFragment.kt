@@ -1,5 +1,6 @@
 package com.example.myapplication2.ui.quiz
 
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.databinding.FragmentQuizStageBinding
 import com.example.myapplication2.model.StudySet
 import com.example.myapplication2.model.Word
+import com.example.myapplication2.utils.getEmoji
+import com.example.myapplication2.utils.getEmojiMessage
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -29,11 +32,17 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var tts: TextToSpeech? = null
     private var language: Locale = Locale.US
+    private var languageTag: String = "en"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tts = TextToSpeech(requireContext(), this)
         val receivedSet = arguments?.getSerializable("studySet") as? StudySet
+        receivedSet?.let {
+            viewModel.setCurrentStudySet(it)
+            languageTag = it.language_from.toString()
+        }
 
         arguments?.let {
             wordList = (it.getSerializable("words") as? ArrayList<Word>) ?: emptyList()
@@ -50,12 +59,18 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            tts?.language = language
+            val locale = Locale.forLanguageTag(languageTag)
+            val result = tts?.setLanguage(locale)
             tts?.setSpeechRate(0.7f)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(requireContext(), "Language $languageTag is not supported", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(requireContext(), "Failed to initialize Text-to-Speech", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun speakText(text: String) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
@@ -104,23 +119,38 @@ class QuizFragment : Fragment(), TextToSpeech.OnInitListener {
             val selected = (v as TextView).text.toString()
             val isCorrect = viewModel.checkAnswer(selected)
 
-            Toast.makeText(
-                requireContext(),
-                if (isCorrect) "✅ Correct!" else "❌ Incorrect",
-                Toast.LENGTH_SHORT
-            ).show()
-
+            showEmojiResult(isCorrect)
 
             if (isCorrect) {
-                Handler(Looper.getMainLooper()).postDelayed({ viewModel.loadNextQuestion() }, 1000)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    viewModel.loadNextQuestion()
+                }, 1000)
             }
         }
+
 
         binding.answer1.setOnClickListener(clickListener)
         binding.answer2.setOnClickListener(clickListener)
         binding.answer3.setOnClickListener(clickListener)
         binding.answer4.setOnClickListener(clickListener)
     }
+
+    private fun showEmojiResult(isCorrect: Boolean) {
+        val text = getEmojiMessage(isCorrect)
+        val drawableRes = getEmoji(isCorrect)
+
+        binding.emojiTextTV.text = text
+        binding.emojiIV.setImageResource(drawableRes)
+        val animation = binding.emojiIV.drawable as? Animatable
+
+        binding.emojiContainer.visibility = View.VISIBLE
+        animation?.start()
+
+        binding.emojiContainer.postDelayed({
+            binding.emojiContainer.visibility = View.GONE
+        }, 1000)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

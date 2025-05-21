@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication2.R
@@ -33,6 +34,7 @@ class StudySetDetailsFragment : Fragment() {
     private lateinit var allWords: List<Word>
     private var currentSet: StudySet? = null
     private var isStudyMarked: Boolean = false
+    private val viewModel: StudySetDetailsViewModel by viewModels()
 
     @Inject lateinit var repository: StudySetRepository
 
@@ -187,6 +189,7 @@ class StudySetDetailsFragment : Fragment() {
 
         binding.studyAllMBTN.setOnClickListener {
             isStudyMarked = false
+            viewModel.markStudyMode(false)
             binding.studyAllMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
             binding.studyMarkedMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.studyAllMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -196,6 +199,7 @@ class StudySetDetailsFragment : Fragment() {
 
         binding.studyMarkedMBTN.setOnClickListener {
             isStudyMarked = true
+            viewModel.markStudyMode(true)
             binding.studyMarkedMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
             binding.studyAllMBTN.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.studyMarkedMBTN.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -261,6 +265,18 @@ class StudySetDetailsFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.isStudyMarked.value?.let { marked ->
+            if (marked) {
+                binding.studyMarkedMBTN.performClick()
+            } else {
+                binding.studyAllMBTN.performClick()
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
